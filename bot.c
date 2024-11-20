@@ -139,7 +139,27 @@ void generateHeatmap(int* shipSizes, int** DisplayGridBot, int** heatmap) {
             }
         }
     }
-
+ void updateHeatMap(int col,int row,char result,char *move,int ** heatGrid){
+    int rowOffset[]={-1,1,0,0};
+    int colOffset[]={0,0,-1,1};
+    if(strcmp(move,"fire")==0){
+           
+            for(int i=0;i<4;i++){
+                int rowAdjacent=row+rowOffset[i];
+                int colAdjacent=col+colOffset[i];
+                if(checkIndex(rowAdjacent,colAdjacent)){
+                    if(result=='*'){
+                        heatGrid[row][col]=0;
+                        heatGrid[rowAdjacent][colAdjacent]++;
+                    }
+                    else{
+                        heatGrid[row][col]=-1;
+heatGrid[rowAdjacent][colAdjacent]--;
+                }
+            }
+            }
+    }}
+ 
 
 // Fire based on the heatmap (targeting the highest value)
 void Fire(int** opponentGrid, int** heatmap, int** DisplayGridBot) {
@@ -155,14 +175,15 @@ void Fire(int** opponentGrid, int** heatmap, int** DisplayGridBot) {
             }
         }
     }
-
+char result;
     // Fire at the target
     if (isalpha(opponentGrid[nexti][nextj])) {
-        DisplayGridBot[nexti][nextj] = '*';  
+       result= DisplayGridBot[nexti][nextj] = '*';  
     } else {
-        DisplayGridBot[nexti][nextj] = 'o';  
+       result= DisplayGridBot[nexti][nextj] = 'o';  
     }
 
     printf("The Bot Fired at %c %d\n", 'A' + nexti, nextj);
+    updateHeatMap(nexti,nextj,result,"fire",heatmap);
 }
 
