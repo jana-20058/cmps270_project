@@ -162,7 +162,7 @@ heatGrid[rowAdjacent][colAdjacent]--;
  
 
 // Fire based on the heatmap (targeting the highest value)
-void Fire(int** opponentGrid, int** heatmap, int** DisplayGridBot,int* ship) {
+void FireBot(int** opponentGrid, int** heatmap, int** DisplayGridBot,int* ship) {
     int nexti = -1, nextj = -1, max = -1;
 
   

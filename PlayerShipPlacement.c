@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "prototypes.c"
+
 #define GridSize 10
 #define ShipNumber 4
 
