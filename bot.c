@@ -1,24 +1,10 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "common_functions.c"
 #define GridSize 10
 #define ShipNumber 4
-void gridInitialization(char **grid)
-{
-    for (int i = 0; i < 10; i++)
-    {
-        grid[i] = (char *)malloc(GridSize * sizeof(char));
-    }
-    for (int j = 0; j < 10; j++)
-    {
-        for (int k = 0; k < 10; k++)
-        {
 
-            grid[j][k] = '~';
-        }
-    }
-}
 char matchingCharacters(int index)
 {
     switch (index)
@@ -115,30 +101,68 @@ void ShipPlacment(char **grid)
         }
     }
 }
-void printgrid(char **grid)
-{
-    char letters[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
-    printf("    ");
-    for (int o = 0; o < 10; o++)
-    {
-        printf("%c ", letters[o]);
-    }
-    printf("\n");
-
-    for (int i = 0; i < 10; i++)
-    {
-        printf("%2d  ", i + 1);
-        for (int j = 0; j < 10; j++)
-        {
-            printf("%c ", grid[i][j]);
+// Initialize the heatmap with zeros
+void initializeHeatGrid(int** heatGrid) {
+    for (int i = 0; i < GridSize; i++) {
+        heatGrid[i] = (int*)malloc(sizeof(int) * GridSize);
+        for (int j = 0; j < GridSize; j++) {
+            heatGrid[i][j] = 0;  
         }
-        printf("\n");
     }
 }
 
-int main()
-{
-    char **bot = (char **)malloc(sizeof(char *) * 10);
-    ShipPlacment(bot);
-    printgrid(bot);
+// Generate a heatmap based on ship sizes and placements
+void generateHeatmap(int* shipSizes, int** DisplayGridBot, int** heatmap) {
+     initializeHeatGrid(heatmap);
+    for (int d= 0; d < ShipNumber; d++) {
+        int shipSize = shipSizes[d];
+
+        for (int i = 0; i < GridSize; i++) {
+            for (int j = 0; j < GridSize; j++) {
+
+                // Horizontal placement
+                if (j + shipSize - 1 < GridSize) {
+
+                    for (int k = 0; k < shipSize; k++) {
+                            heatmap[i][j + k] += 1;
+                        }
+                    }
+                
+
+                // Vertical placement
+                if (i+ shipSize - 1 < GridSize) {
+                        for (int k = 0; k < shipSize; k++) {
+                            heatmap[i + k][j] += 1; 
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+// Fire based on the heatmap (targeting the highest value)
+void Fire(int** opponentGrid, int** heatmap, int** DisplayGridBot) {
+    int nexti = -1, nextj = -1, max = -1;
+
+  
+    for (int i = 0; i < GridSize; i++) {
+        for (int j = 0; j < GridSize; j++) {
+            if (heatmap[i][j] > max && DisplayGridBot[i][j] == '~') {
+                max = heatmap[i][j];
+                nexti = i;
+                nextj = j;
+            }
+        }
+    }
+
+    // Fire at the target
+    if (isalpha(opponentGrid[nexti][nextj])) {
+        DisplayGridBot[nexti][nextj] = '*';  
+    } else {
+        DisplayGridBot[nexti][nextj] = 'o';  
+    }
+
+    printf("The Bot Fired at %c %d\n", 'A' + nexti, nextj);
 }
+
