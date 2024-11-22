@@ -1,9 +1,13 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "common_functions.h"
+
 #define GridSize 10
 #define ShipNumber 4
+
 
 void gridInitialization(char **grid)
 {

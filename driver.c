@@ -1,5 +1,15 @@
+#include <ctype.h>
+#include <stdio.h>
+
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include "common_functions.c"
 #include "player.c"
 #include "bot.c"
+
+#define ShipNumber 4
+# define GridSize 10
 
 int main()
 { srand(time(NULL));
@@ -9,7 +19,7 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
 
     printgrid(Player);
     char mode[10];
-    printf("What difficulty level do you want to play(easy,hard)? ");
+    printf("Whaat difficulty level do you want to play(easy,hard)? ");
     scanf("%9s", mode);
     to_lowercase(mode);
     while (strcmp(mode, "easy") != 0 && strcmp(mode, "hard") != 0)
@@ -22,10 +32,11 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
     char name1[20];
     scanf("%19s", name1);
     int randplayer = rand() % 2;
-    char *PlayerName;
-    char **PlayerGrid;
+  
     char **PlayerDisplayedGrid = (char **)malloc(sizeof(char *) * 10);
+    char **BotDisplayedGrid = (char **)malloc(sizeof(char *) * 10);
     gridInitialization(PlayerDisplayedGrid);
+    gridInitialization(BotDisplayedGrid);
 
 
     if (randplayer == 0)
@@ -37,14 +48,15 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
         printf("The bot will start the game\n");
     }
 //in the initialization process between bot and player there is no difference who starts first
-           fillGrid(PlayerGrid, PlayerName);
-    printgrid(PlayerGrid);
+           fillGrid(Player, name1);
+    printgrid(Player);
 
     printf("press enter if you have finished placing your ships ");
     getchar();
     getchar();
     clearConsole(); // or system("clear");
      ShipPlacment(Bot);
+     printgrid(Bot);
 
     // the players' ships
     int shipPlayer[ShipNumber] = {5, 3, 4, 2};
@@ -76,17 +88,20 @@ int smokeScreensUsedBot = 0;
 
 
     printf("THE GAME WILL START!\n");
+    int **heatmap = (int **)malloc(sizeof(int *) * 10);
+    generateHeatmap(shipPlayer,heatmap);
 
     if(randplayer==1){
-       /// botMove(); a function should perform which bot move to do
+        //will be changed shortly after
+       botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
     }
    
     while (counterSunkByBot<4 && counterSunkByPlayer<4)
     {
-        printf("\n%s this is  your opponent's current grid\n", PlayerName);
+        printf("\n%s this is  your opponent's current grid\n", name1);
         printgrid(PlayerDisplayedGrid);
         printf("The moves you can perform are:\n%4s\n%4s\n%4s\n%4s\n%4s", "1-Fire", "2-Radar", "3-Smoke", "4-Artillery", "5-Torpedo");
-        printf("\nPlease %s , enter your command followed by the coordinate (e.g. Fire B3)\n", PlayerName);
+        printf("\nPlease %s , enter your command followed by the coordinate (e.g. Fire B3)\n", name1);
 
         char coordinate[4];
         char command[12];
@@ -148,17 +163,30 @@ int smokeScreensUsedBot = 0;
         }
 
         printf("press enter to pass the turn ");
+       /*getchar();
         getchar();
-        getchar();
-        clearConsole();
+        clearConsole();*/
 
-//call the bot function
-
-
+//call the bot function note will be chnaged shortly
+botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
+  //for checking
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+        printf("%d   ",heatmap[i][j]);
     }
+    printf("\n");
+  }
+
+    for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+        printf("%c   ",BotDisplayedGrid[i][j]);
+    }
+     printf("\n");
+
+    }}
 printf("The Game has ended\n");
 if(counterSunkByPlayer>=4){
-printf("Congratulations %s ! You have WON!!",PlayerName);}
+printf("Congratulations %s ! You have WON!!",name1);}
 else{
 printf("You LOST!");
 }
@@ -182,7 +210,7 @@ free(BotSmoke);
 
 
     return 0;
-}
 
+}
 
 
