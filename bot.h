@@ -1,6 +1,6 @@
 #ifndef BOT_H
 #define BOT_H
-int misses = 0;
+ int misses = 0;
  int fires = 0;
 int totalNumberOfShipsSunkByBot = 0;
 int flagShipSunkInCurrentTurn = 0;
