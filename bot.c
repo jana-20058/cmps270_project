@@ -1,12 +1,18 @@
 #include <time.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "common_functions.c"
+#include <string.h>
+#include "common_functions.h"
+#include "bot.h"
+
 #define GridSize 10
 #define ShipNumber 4
 
-char matchingCharacters(int index)
-{
+
+
+char matchingCharacters(int index){
+
     switch (index)
     {
     case 5:
@@ -24,22 +30,11 @@ char matchingCharacters(int index)
     }
 }
 
-void shuffle(int *array)
-{
-    for (int i = ShipNumber - 1; i > 0; i--)
-    {
-        int j = rand() % (i + 1);
-        int temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-}
 void ShipPlacment(char **grid)
 {
     srand(time(NULL));
     int size[] = {5, 3, 4, 2};
     gridInitialization(grid);
-    shuffle(size);
     for (int i = 0; i < ShipNumber; i++)
     {
         int shipLength = size[i];
@@ -100,95 +95,394 @@ void ShipPlacment(char **grid)
             }
         }
     }
+    // for checking
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            printf("%c", grid[i][j]);
+        }
+    }
 }
 // Initialize the heatmap with zeros
-void initializeHeatGrid(int** heatGrid) {
-    for (int i = 0; i < GridSize; i++) {
-        heatGrid[i] = (int*)malloc(sizeof(int) * GridSize);
-        for (int j = 0; j < GridSize; j++) {
-            heatGrid[i][j] = 0;  
+void initializeHeatGrid(int **heatGrid)
+{
+    for (int i = 0; i < GridSize; i++)
+    {
+        heatGrid[i] = (int *)malloc(sizeof(int) * GridSize);
+        for (int j = 0; j < GridSize; j++)
+        {
+            heatGrid[i][j] = 0;
+        }
+    }
+}
+void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
+{
+    int rowOffset[] = {-1, 1, 0, 0};
+    int colOffset[] = {0, 0, -1, 1};
+
+    if (strcmp(move, "fire") == 0)
+    {
+        if (result == '*')
+        {
+            heatGrid[row][col] = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                int adjRow = row + rowOffset[i];
+                int adjCol = col + colOffset[i];
+                if (checkIndex(adjRow, adjCol) && heatGrid[adjRow][adjCol] != 0)
+                {
+                    heatGrid[adjRow][adjCol] += 5;
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                int adjRow = row + rowOffset[i] * 2;
+                int adjCol = col + colOffset[i] * 2;
+                if (checkIndex(adjRow, adjCol) && heatGrid[adjRow][adjCol] != 0)
+                {
+                    heatGrid[adjRow][adjCol] += 2;
+                }
+            }
+        }
+        else if (result == 'o')
+        {
+            misses++;
+            heatGrid[row][col] = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                int adjRow = row + rowOffset[i];
+                int adjCol = col + colOffset[i];
+                if (checkIndex(adjRow, adjCol) && heatGrid[adjRow][adjCol] != -1 && heatGrid[adjRow][adjCol] != 0)
+                {
+                    heatGrid[adjRow][adjCol] -=1;
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                int adjRow = row + rowOffset[i] * 2;
+                int adjCol = col + colOffset[i] * 2;
+                if (checkIndex(adjRow, adjCol) && heatGrid[adjRow][adjCol] != -1 && heatGrid[adjRow][adjCol] != 0)
+                {
+                    heatGrid[adjRow][adjCol] -= 1;
+                }
+            }
         }
     }
 }
 
+
 // Generate a heatmap based on ship sizes and placements
-void generateHeatmap(int* shipSizes, int** DisplayGridBot, int** heatmap) {
-     initializeHeatGrid(heatmap);
-    for (int d= 0; d < ShipNumber; d++) {
+void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
+{
+    initializeHeatGrid(heatmap);
+
+    for (int d = 0; d < ShipNumber; d++)
+    {
         int shipSize = shipSizes[d];
-
-        for (int i = 0; i < GridSize; i++) {
-            for (int j = 0; j < GridSize; j++) {
-
-                // Horizontal placement
-                if (j + shipSize - 1 < GridSize) {
-
-                    for (int k = 0; k < shipSize; k++) {
-                            heatmap[i][j + k] += 1;
+        if (shipSize != -1)
+        { // takes only the ships that weren't sunk
+            for (int i = 0; i < GridSize; i++)
+            {
+                for (int j = 0; j < GridSize; j++)
+                {
+                    // Horizontal placement
+                    if (j + shipSize - 1 < GridSize)
+                    {
+                        int valid = 1;
+                        for (int k = 0; k < shipSize; k++)
+                        {
+                            if (DisplayedBot[i][j + k] != '~')
+                               {valid = 0;
+                            break;}
+                        }
+                        if (valid)
+                        {
+                            for (int k = 0; k < shipSize; k++)
+                                heatmap[i][j + k] += 1;
                         }
                     }
-                
-
-                // Vertical placement
-                if (i+ shipSize - 1 < GridSize) {
-                        for (int k = 0; k < shipSize; k++) {
-                            heatmap[i + k][j] += 1; 
+                    // Vertical placement
+                    if (i + shipSize - 1 < GridSize)
+                    {
+                        int valid = 1;
+                        for (int k = 0; k < shipSize; k++)
+                        {
+                            if (DisplayedBot[i + k][j] != '~')
+                               {valid = 0;
+                            break;}
+                        }
+                        if (valid)
+                        {
+                            for (int k = 0; k < shipSize; k++)
+                                heatmap[i + k][j] += 1;
                         }
                     }
                 }
             }
         }
     }
- void updateHeatMap(int col,int row,char result,char *move,int ** heatGrid){
-    int rowOffset[]={-1,1,0,0};
-    int colOffset[]={0,0,-1,1};
-    if(strcmp(move,"fire")==0){
-           
-            for(int i=0;i<4;i++){
-                int rowAdjacent=row+rowOffset[i];
-                int colAdjacent=col+colOffset[i];
-                if(checkIndex(rowAdjacent,colAdjacent)){
-                    if(result=='*'){
-                        heatGrid[row][col]=0;
-                        heatGrid[rowAdjacent][colAdjacent]++;
-                    }
-                    else{
-                        heatGrid[row][col]=-1;
-heatGrid[rowAdjacent][colAdjacent]--;
-                }
+    // Stronger bias for edges and corners
+    for (int i = 0; i < GridSize; i++)
+    {
+        for (int j = 0; j < GridSize; j++)
+        {
+            if (i == 0 || j == 0 || i == GridSize - 1 || j == GridSize - 1)
+            {if(DisplayedBot[i][j]=='~')
+                heatmap[i][j] += 3; // Increased edge bias
             }
+            if ((i == 0 && j == 0) || (i == 0 && j == GridSize - 1) ||
+                (i == GridSize - 1 && j == 0) || (i == GridSize - 1 && j == GridSize - 1))
+            {if(DisplayedBot[i][j]=='~')
+                heatmap[i][j] += 5; // Stronger corner bias
             }
-    }}
- 
+        }
+    }
+}
+int *checkedge(char **DisplayedGridBot)
+{
+    int *arr = (int *)malloc(sizeof(int) * 3);
+    int flag = 0;
+    int i = rand() % GridSize;
+    int j = rand() % GridSize;
 
+    while (!flag)
+    {
+        if (rand() % 2 == 0)
+        {
+            i = (rand() % 2 == 0) ? 0 : GridSize - 1; // Row 0 or GridSize-1
+            j = rand() % GridSize;
+        }
+        else
+        {
+            j = (rand() % 2 == 0) ? 0 : GridSize - 1; // Column 0 or GridSize-1
+            i = rand() % GridSize;
+        }
+
+        if (DisplayedGridBot[i][j] == '~')
+        {
+            arr[0] = i;
+            arr[1] = j;
+            flag = 1;
+        }
+    }
+    return arr;
+}
+
+int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **DisplayedGridBot, int *ship)
+{
+    if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
+    {
+        // Torpedo()
+    }
+    if (flagShipSunkInCurrentTurn == 1)
+    {
+        // Artillery()
+    }
+    if (radarSweepsBot != 3)
+    {
+        // Radarsweep()
+    }
+    if (flagShipSunkInCurrentTurn > 0 && smokeScreensUsedBot < totalNumberOfShipsSunkByBot)
+    {
+        // Smoke()
+    }
+    else
+    {
+        FireBot(oponentGrid, heatmap, DisplayedGridBot, ship);
+        printf("Before fire");
+        for(int i=0;i<4;i++){
+            
+        printf("%d",ship[i]);
+    }
+    }
+    flagShipSunkInCurrentTurn = ShipsSunkByBot(ship);
+    printf("After fire");
+    for(int i=0;i<4;i++){
+        printf("%d",ship[i]);
+    }
+    printf(" \nTHis is the flag %d\n",flagShipSunkInCurrentTurn);
+    if (flagShipSunkInCurrentTurn)
+    {
+        generateHeatmap(ship, heatmap, DisplayedGridBot);
+    }
+    return totalNumberOfShipsSunkByBot;
+}
 // Fire based on the heatmap (targeting the highest value)
-void FireBot(int** opponentGrid, int** heatmap, int** DisplayGridBot,int* ship) {
-    int nexti = -1, nextj = -1, max = -1;
+void FireBot(char **opponentGrid, int **heatmap, char **DisplayGridBot, int *ship)
+{
+    int nexti = -1, nextj = -1;
+    // fires == 7 && ShipsSunk == 0 || fires == 14 && ShipsSunk == 1
+    if (fires == 0)
+    {
+        nexti = rand() % GridSize;
+        nextj = rand() % GridSize;
 
-  
-    for (int i = 0; i < GridSize; i++) {
-        for (int j = 0; j < GridSize; j++) {
-            if (heatmap[i][j] > max && DisplayGridBot[i][j] == '~') {
+        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship,heatmap);
+    }
+    else if (misses >= 3 && misses <= 8)
+    {
+        int *arr = checkedge(DisplayGridBot);
+        if (checkIndex(arr[0], arr[1]))
+        {
+            nexti = arr[0];
+            nextj = arr[1];
+        }
+    }
+    else
+    {
+        int *arr = heatmapvalue(heatmap, DisplayGridBot);
+        nexti = arr[0];
+        nextj = arr[1];
+    }
+
+    if (nexti != -1 && nextj != -1)
+    {
+        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship,heatmap);
+        printf("The Bot Fired at %d %d\n", nexti, nextj);
+        updateHeatMap(nexti, nextj, result, "fire", heatmap);
+        fires++;
+    }
+}
+int *heatmapvalue(int **heatmap, char **DisplayGridBot)
+{
+    int count = 0, max = -1;
+    int *array = (int *)malloc(sizeof(int) * 2);
+    int candidates[GridSize * GridSize][2];
+    for (int i = 0; i < GridSize; i++)
+    {
+        for (int j = 0; j < GridSize; j++)
+        {
+            if (heatmap[i][j] > max && DisplayGridBot[i][j] == '~')
+            {
                 max = heatmap[i][j];
-                nexti = i;
-                nextj = j;
+                count = 0;
+                candidates[count][0] = i;
+                candidates[count][1] = j;
+                count++;
+            }
+            else if (heatmap[i][j] == max && DisplayGridBot[i][j] == '~')
+            {
+                candidates[count][0] = i;
+                candidates[count][1] = j;
+                count++;
             }
         }
     }
-char result;
-    // Fire at the target
-    if (isalpha(opponentGrid[nexti][nextj])) {
-       result= DisplayGridBot[nexti][nextj] = '*';  
+    if (count > 0)
+    {
+        int maxEdgeBias = -1;
+        int edgeCandidates[GridSize * GridSize][2];
+        int edgeCount = 0;
+
+        // Evaluate edge bias for candidates
+        for (int i = 0; i < count; i++)
+        {
+            int r = candidates[i][0];
+            int c = candidates[i][1];
+            int edgeBias = 0;
+
+            // Calculate edge bias
+            if (r == 0 || c == 0 || r == GridSize - 1 || c == GridSize - 1)
+            {
+                edgeBias += 2; // Edge
+            }
+            if ((r == 0 && c == 0) || (r == 0 && c == GridSize - 1) ||
+                (r == GridSize - 1 && c == 0) || (r == GridSize - 1 && c == GridSize - 1))
+            {
+                edgeBias += 3; // Corner
+            }
+
+            // Update edgeCandidates based on edgeBias
+            if (edgeBias > maxEdgeBias)
+            {
+                maxEdgeBias = edgeBias;
+                edgeCount = 0;
+                edgeCandidates[edgeCount][0] = r;
+                edgeCandidates[edgeCount][1] = c;
+                edgeCount++;
+            }
+            else if (edgeBias == maxEdgeBias)
+            {
+                edgeCandidates[edgeCount][0] = r;
+                edgeCandidates[edgeCount][1] = c;
+                edgeCount++;
+            }
+        }
+
+        if (edgeCount > 0)
+        {
+            int choice = rand() % edgeCount;
+            array[0] = edgeCandidates[choice][0];
+            array[1] = edgeCandidates[choice][1];
+        }
+        else
+        {
+            int choice = rand() % count;
+            array[0] = candidates[choice][0];
+            array[1] = candidates[choice][1];
+        }
+    }
+    return array;
+}
+
+char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int nexti, int nextj, int *ship,int ** heatmap)
+{
+    char result;
+    if (isalpha(opponentGrid[nexti][nextj]) && heatmap[nexti][nextj]!=0)
+    {
+        result = DisplayGridBot[nexti][nextj] = '*'; // Hit
         int num = matchingIndecies(opponentGrid[nexti][nextj]);
-        if (num != -1 && ship[num]>0)
+        if (num != -1 && ship[num] > 0)
         {
             ship[num]--;
         }
-    } else {
-       result= DisplayGridBot[nexti][nextj] = 'o';  
     }
-
-    printf("The Bot Fired at %c %d\n", 'A' + nexti, nextj);
-    updateHeatMap(nexti,nextj,result,"fire",heatmap);
+    else
+    {
+        result = DisplayGridBot[nexti][nextj] = 'o'; // Miss
+    }
+    return result;
 }
 
+int ShipsSunkByBot(int *ship)
+{flagShipSunkInCurrentTurn=0;
+    int counter = 0;
+    for (int i = 0; i < ShipNumber; i++)
+    {
+        if (ship[i] == 0)
+        { flagShipSunkInCurrentTurn=1;
+            ship[i] = -1;
+
+            char *str;
+            switch (i)
+            {
+            case 0:
+                str = "Carrier";
+                break;
+            case 1:
+                str = "destroyer";
+                break;
+            case 2:
+                str = "BattleShip";
+                break;
+            case 3:
+                str = "Submarine";
+                break;
+
+            default:
+                break;
+            }
+            printf("\n%s ship was Sunk by the Bot!\n", str);
+            counter++;
+        }
+       
+    }
+    totalNumberOfShipsSunkByBot += counter;
+    printf("number of ships sunk:%d",totalNumberOfShipsSunkByBot);
+    return flagShipSunkInCurrentTurn;
+}
