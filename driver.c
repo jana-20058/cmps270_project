@@ -12,14 +12,14 @@
 # define GridSize 10
 
 int main()
-{ srand(time(NULL));
+{srand(time(NULL));
     char **Player = (char **)malloc(sizeof(char *) * 10);
 char **Bot = (char **)malloc(sizeof(char *) * 10);
      gridInitialization(Player);
 
     printgrid(Player);
     char mode[10];
-    printf("Whaat difficulty level do you want to play(easy,hard)? ");
+    printf("What difficulty level do you want to play(easy,hard)? ");
     scanf("%9s", mode);
     to_lowercase(mode);
     while (strcmp(mode, "easy") != 0 && strcmp(mode, "hard") != 0)
@@ -89,11 +89,11 @@ int smokeScreensUsedBot = 0;
 
     printf("THE GAME WILL START!\n");
     int **heatmap = (int **)malloc(sizeof(int *) * 10);
-    generateHeatmap(shipPlayer,heatmap);
+    generateHeatmap(shipPlayer,heatmap,BotDisplayedGrid);
 
     if(randplayer==1){
         //will be changed shortly after
-       botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
+       botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
     }
    
     while (counterSunkByBot<4 && counterSunkByPlayer<4)
@@ -168,7 +168,7 @@ int smokeScreensUsedBot = 0;
         clearConsole();*/
 
 //call the bot function note will be chnaged shortly
-botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
+counterSunkByBot=botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
   //for checking
   for(int i=0;i<10;i++){
     for(int j=0;j<10;j++){
@@ -212,5 +212,4 @@ free(BotSmoke);
     return 0;
 
 }
-
 
