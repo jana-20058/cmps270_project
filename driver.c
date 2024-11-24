@@ -19,7 +19,7 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
 
     printgrid(Player);
     char mode[10];
-    printf("What difficulty level do you want to play(easy,hard)? ");
+    printf("Whaat difficulty level do you want to play(easy,hard)? ");
     scanf("%9s", mode);
     to_lowercase(mode);
     while (strcmp(mode, "easy") != 0 && strcmp(mode, "hard") != 0)
@@ -89,11 +89,19 @@ int smokeScreensUsedBot = 0;
 
     printf("THE GAME WILL START!\n");
     int **heatmap = (int **)malloc(sizeof(int *) * 10);
+<<<<<<< HEAD
     generateHeatmap(shipPlayer,heatmap,BotDisplayedGrid);
 
     if(randplayer==1){
         //will be changed shortly after
        botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
+=======
+    generateHeatmap(shipPlayer,heatmap);
+
+    if(randplayer==1){
+        //will be changed shortly after
+       botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
+>>>>>>> 7735f5f40b3bc6abb6acab58a7c531978e2a2998
     }
    
     while (counterSunkByBot<4 && counterSunkByPlayer<4)
@@ -168,7 +176,11 @@ int smokeScreensUsedBot = 0;
         clearConsole();*/
 
 //call the bot function note will be chnaged shortly
+<<<<<<< HEAD
 counterSunkByBot=botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
+=======
+botmove(Player,heatmap,0,0,0,0,BotDisplayedGrid,Curr);
+>>>>>>> 7735f5f40b3bc6abb6acab58a7c531978e2a2998
   //for checking
   for(int i=0;i<10;i++){
     for(int j=0;j<10;j++){
@@ -213,3 +225,7 @@ free(BotSmoke);
 
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7735f5f40b3bc6abb6acab58a7c531978e2a2998
