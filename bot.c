@@ -9,11 +9,16 @@
 #define GridSize 10
 #define ShipNumber 4
 
+typedef struct
+{
+    int row;
+    int col;
+} coordinate;
 
+char matchingCharacters(int length)
+{
 
-char matchingCharacters(int index){
-
-    switch (index)
+    switch (length)
     {
     case 5:
         return 'C';
@@ -158,7 +163,7 @@ void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
                 int adjCol = col + colOffset[i];
                 if (checkIndex(adjRow, adjCol) && heatGrid[adjRow][adjCol] != -1 && heatGrid[adjRow][adjCol] != 0)
                 {
-                    heatGrid[adjRow][adjCol] -=1;
+                    heatGrid[adjRow][adjCol] -= 1;
                 }
             }
 
@@ -174,7 +179,6 @@ void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
         }
     }
 }
-
 
 // Generate a heatmap based on ship sizes and placements
 void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
@@ -197,8 +201,10 @@ void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
                         for (int k = 0; k < shipSize; k++)
                         {
                             if (DisplayedBot[i][j + k] != '~')
-                               {valid = 0;
-                            break;}
+                            {
+                                valid = 0;
+                                break;
+                            }
                         }
                         if (valid)
                         {
@@ -213,8 +219,10 @@ void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
                         for (int k = 0; k < shipSize; k++)
                         {
                             if (DisplayedBot[i + k][j] != '~')
-                               {valid = 0;
-                            break;}
+                            {
+                                valid = 0;
+                                break;
+                            }
                         }
                         if (valid)
                         {
@@ -232,13 +240,15 @@ void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
         for (int j = 0; j < GridSize; j++)
         {
             if (i == 0 || j == 0 || i == GridSize - 1 || j == GridSize - 1)
-            {if(DisplayedBot[i][j]=='~')
-                heatmap[i][j] += 3; // Increased edge bias
+            {
+                if (DisplayedBot[i][j] == '~')
+                    heatmap[i][j] += 3; // Increased edge bias
             }
             if ((i == 0 && j == 0) || (i == 0 && j == GridSize - 1) ||
                 (i == GridSize - 1 && j == 0) || (i == GridSize - 1 && j == GridSize - 1))
-            {if(DisplayedBot[i][j]=='~')
-                heatmap[i][j] += 5; // Stronger corner bias
+            {
+                if (DisplayedBot[i][j] == '~')
+                    heatmap[i][j] += 5; // Stronger corner bias
             }
         }
     }
@@ -277,7 +287,7 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
 {
     if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
     {
-        // Torpedo()
+        torpedo(oponentGrid, DisplayedGridBot, ship);
     }
     if (flagShipSunkInCurrentTurn == 1)
     {
@@ -295,17 +305,19 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
     {
         FireBot(oponentGrid, heatmap, DisplayedGridBot, ship);
         printf("Before fire");
-        for(int i=0;i<4;i++){
-            
-        printf("%d",ship[i]);
-    }
+        for (int i = 0; i < 4; i++)
+        {
+
+            printf("%d", ship[i]);
+        }
     }
     flagShipSunkInCurrentTurn = ShipsSunkByBot(ship);
     printf("After fire");
-    for(int i=0;i<4;i++){
-        printf("%d",ship[i]);
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%d", ship[i]);
     }
-    printf(" \nTHis is the flag %d\n",flagShipSunkInCurrentTurn);
+    printf(" \nTHis is the flag %d\n", flagShipSunkInCurrentTurn);
     if (flagShipSunkInCurrentTurn)
     {
         generateHeatmap(ship, heatmap, DisplayedGridBot);
@@ -322,7 +334,7 @@ void FireBot(char **opponentGrid, int **heatmap, char **DisplayGridBot, int *shi
         nexti = rand() % GridSize;
         nextj = rand() % GridSize;
 
-        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship,heatmap);
+        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship, heatmap);
     }
     else if (misses >= 3 && misses <= 8)
     {
@@ -342,7 +354,7 @@ void FireBot(char **opponentGrid, int **heatmap, char **DisplayGridBot, int *shi
 
     if (nexti != -1 && nextj != -1)
     {
-        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship,heatmap);
+        char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship, heatmap);
         printf("The Bot Fired at %d %d\n", nexti, nextj);
         updateHeatMap(nexti, nextj, result, "fire", heatmap);
         fires++;
@@ -430,10 +442,10 @@ int *heatmapvalue(int **heatmap, char **DisplayGridBot)
     return array;
 }
 
-char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int nexti, int nextj, int *ship,int ** heatmap)
+char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int nexti, int nextj, int *ship, int **heatmap)
 {
     char result;
-    if (isalpha(opponentGrid[nexti][nextj]) && heatmap[nexti][nextj]!=0)
+    if (isalpha(opponentGrid[nexti][nextj]) && heatmap[nexti][nextj] != 0)
     {
         result = DisplayGridBot[nexti][nextj] = '*'; // Hit
         int num = matchingIndecies(opponentGrid[nexti][nextj]);
@@ -450,12 +462,14 @@ char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int next
 }
 
 int ShipsSunkByBot(int *ship)
-{flagShipSunkInCurrentTurn=0;
+{
+    flagShipSunkInCurrentTurn = 0;
     int counter = 0;
     for (int i = 0; i < ShipNumber; i++)
     {
         if (ship[i] == 0)
-        { flagShipSunkInCurrentTurn=1;
+        {
+            flagShipSunkInCurrentTurn = 1;
             ship[i] = -1;
 
             char *str;
@@ -480,9 +494,147 @@ int ShipsSunkByBot(int *ship)
             printf("\n%s ship was Sunk by the Bot!\n", str);
             counter++;
         }
-       
     }
     totalNumberOfShipsSunkByBot += counter;
-    printf("number of ships sunk:%d",totalNumberOfShipsSunkByBot);
+    printf("number of ships sunk:%d", totalNumberOfShipsSunkByBot);
     return flagShipSunkInCurrentTurn;
+}
+char matching(int index)
+{
+
+    switch (index)
+    {
+    case 0:
+        return 'C';
+    case 1:
+        return 'd';
+    case 2:
+        return 'B';
+    case 3:
+        return 's';
+
+    default:
+        return '\0';
+        break;
+    }
+}
+
+void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship)
+{
+    coordinate arr[12];
+    for (int i = 0; i < 12; i++)
+    {
+        arr[i].row = -1;
+        arr[i].col = -1;
+    }
+    int index = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        if (ship[i] == -1)
+        {
+            char c = matching(i);
+            for (int j = 0; j < GridSize; j++)
+            {
+                for (int k = 0; k < GridSize; k++)
+                {
+                    if (opponentGrid[j][k] == c && DisplayedBotGrid[j][k] == '*')
+                    { // idk if the second part is needed tbh
+                        arr[index].row = j;
+                        arr[index].col = k;
+                        index++;
+                    }
+                }
+            }
+        }
+    }
+
+    int col = 0;
+    int maxHitsCol = 0;
+    int columnToApplyTorpedo = 0;
+    int row = 0;
+    int masHitsRow = 0;
+    int RowToApplyTorpedo = 0;
+    for (int i = 0; i < index; i++)
+    {
+        int HitsInCol = 0;
+        int HitsInRow = 0;
+        for (int j = 0; j < GridSize; j++)
+        {
+            if (DisplayedBotGrid[j][col] == '*')
+            {
+                if (arr[i].row != j && arr[i].col != col)
+                {
+                    HitsInCol++;
+                }
+            }
+            if (DisplayedBotGrid[j][col] == '*')
+            {
+                if (arr[i].row != row && arr[i].col != j)
+                {
+                    HitsInRow++;
+                }
+            }
+        }
+        if (maxHitsCol < HitsInCol)
+        {
+            maxHitsCol = HitsInCol;
+            columnToApplyTorpedo = col;
+        }
+        if (masHitsRow < HitsInRow)
+        {
+            masHitsRow = HitsInRow;
+            RowToApplyTorpedo = row;
+        }
+        col++;
+        row++;
+    }
+
+    if (maxHitsCol < masHitsRow)
+    {
+        // call torpedo on the Row
+        for (int i = 0; i < GridSize; i++)
+        {
+            if (DisplayedBotGrid[RowToApplyTorpedo][i] == '*' || DisplayedBotGrid[RowToApplyTorpedo][i] == 'o')
+            {
+                continue;
+            }
+            else if (isalpha(opponentGrid[RowToApplyTorpedo][i]))
+            {
+                int n = matchingIndecies(opponentGrid[RowToApplyTorpedo][i]);
+                if (n != -1)
+                {
+                    ship[n]--;
+                }
+                DisplayedBotGrid[RowToApplyTorpedo][i] = '*';
+            }
+            else
+            {
+                DisplayedBotGrid[RowToApplyTorpedo][i] = 'o';
+            }
+        }
+    }
+    else
+    {
+        // call torpedo on col
+        for (int i = 0; i < GridSize; i++)
+        {
+            if (DisplayedBotGrid[i][columnToApplyTorpedo] == '*' || DisplayedBotGrid[i][columnToApplyTorpedo] == 'o')
+            {
+                continue;
+            }
+            else if (isalpha(opponentGrid[i][columnToApplyTorpedo]))
+            {
+                int n = matchingIndecies(opponentGrid[i][columnToApplyTorpedo]);
+                if (n != -1)
+                {
+                    ship[n]--;
+                }
+                DisplayedBotGrid[i][columnToApplyTorpedo] = '*';
+            }
+            else
+            {
+                DisplayedBotGrid[i][columnToApplyTorpedo] = 'o';
+            }
+        }
+    }
 }
