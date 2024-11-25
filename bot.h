@@ -17,4 +17,6 @@ int matchingIndecies(char cell);
 int *checkedge(char **DisplayedGridBot);
 char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int nexti, int nextj, int *ship,int ** heatmap);
 int  ShipsSunkByBot(int *ship);
+void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship);
+char matching(int index);
 #endif
