@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "common_functions.h"
 #include "bot.h"
 
@@ -287,6 +288,7 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
 {
     if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
     {
+        printf("check check !!");
         torpedo(oponentGrid, DisplayedGridBot, ship);
     }
     if (flagShipSunkInCurrentTurn == 1)
@@ -527,6 +529,12 @@ void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship)
         arr[i].row = -1;
         arr[i].col = -1;
     }
+    // will be removed shortly
+    for (int i = 0; i < 12; i++)
+    {
+        printf("\n The coordinates :%d  , %d )", arr[i].row, arr[i].col);
+    }
+
     int index = 0;
     for (int i = 0; i < 4; i++)
     {
@@ -548,68 +556,73 @@ void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship)
         }
     }
 
-    int col = 0;
-    int maxHitsCol = 0;
-    int columnToApplyTorpedo = 0;
-    int row = 0;
-    int masHitsRow = 0;
-    int RowToApplyTorpedo = 0;
-    for (int i = 0; i < index; i++)
+    // will be removed shortly
+    for (int i = 0; i < 12; i++)
     {
-        int HitsInCol = 0;
-        int HitsInRow = 0;
-        for (int j = 0; j < GridSize; j++)
-        {
-            if (DisplayedBotGrid[j][col] == '*')
-            {
-                if (arr[i].row != j && arr[i].col != col)
-                {
-                    HitsInCol++;
-                }
-            }
-            if (DisplayedBotGrid[j][col] == '*')
-            {
-                if (arr[i].row != row && arr[i].col != j)
-                {
-                    HitsInRow++;
-                }
-            }
-        }
-        if (maxHitsCol < HitsInCol)
-        {
-            maxHitsCol = HitsInCol;
-            columnToApplyTorpedo = col;
-        }
-        if (masHitsRow < HitsInRow)
-        {
-            masHitsRow = HitsInRow;
-            RowToApplyTorpedo = row;
-        }
-        col++;
-        row++;
+        printf("\n The coordinates :%d  , %d )", arr[i].row, arr[i].col);
     }
 
-    if (maxHitsCol < masHitsRow)
+    int maxHitsCol = 0, columnToApplyTorpedo = 0;
+int maxHitsRow = 0, rowToApplyTorpedo = 0;
+
+
+bool isShip[GridSize][GridSize] = {false}; //in defult all values are set to false
+for (int i = 0; i < index; i++) {
+    if (arr[i].row >= 0 && arr[i].row < GridSize &&
+        arr[i].col >= 0 && arr[i].col < GridSize) {
+        isShip[arr[i].row][arr[i].col] = true; //set the ships in the list as true
+    }
+}
+
+for (int K = 0; K < GridSize; K++) {
+    int hitsInCol = 0, hitsInRow = 0;
+
+    for (int j = 0; j < GridSize; j++) {
+        if (DisplayedBotGrid[j][K] == '*' && !isShip[j][K]) {
+            hitsInCol++;
+        }
+
+        if (DisplayedBotGrid[K][j] == '*' && !isShip[K][j]) {
+            hitsInRow++;
+        }
+    }
+
+    if (hitsInCol > maxHitsCol) {
+        maxHitsCol = hitsInCol;
+        columnToApplyTorpedo = K;
+    }
+
+    if (hitsInRow > maxHitsRow) {
+        maxHitsRow = hitsInRow;
+        rowToApplyTorpedo = K;
+    }
+}
+
+    // will be removed after
+    printf("\nCol For torpedo %d", columnToApplyTorpedo);
+    printf("\nRow For torpedo %d", rowToApplyTorpedo);
+
+    if (maxHitsCol <= maxHitsRow)
     {
         // call torpedo on the Row
         for (int i = 0; i < GridSize; i++)
         {
-            if (DisplayedBotGrid[RowToApplyTorpedo][i] == '*' || DisplayedBotGrid[RowToApplyTorpedo][i] == 'o')
+            if (DisplayedBotGrid[rowToApplyTorpedo][i] == '*' || DisplayedBotGrid[rowToApplyTorpedo][i] == 'o')
             {
                 continue;
             }
-            else if (isalpha(opponentGrid[RowToApplyTorpedo][i]))
+            else if (isalpha(opponentGrid[rowToApplyTorpedo][i]))
             {
-                int n = matchingIndecies(opponentGrid[RowToApplyTorpedo][i]);
+                int n = matchingIndecies(opponentGrid[rowToApplyTorpedo][i]);
                 if (n != -1)
                 {
                     ship[n]--;
                 }
-                DisplayedBotGrid[RowToApplyTorpedo][i] = '*';
+                DisplayedBotGrid[rowToApplyTorpedo][i] = '*';
             }
             else
             {
-                DisplayedBotGrid[RowToApplyTorpedo][i] = 'o';
+                DisplayedBotGrid[rowToApplyTorpedo][i] = 'o';
             }
         }
     }
