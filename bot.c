@@ -651,3 +651,39 @@ for (int K = 0; K < GridSize; K++) {
         }
     }
 }
+int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid) {
+    if (radarSweepsUsed >= 3) {
+        printf("You have used all your radar sweeps\n");
+        return 0; 
+    }
+    int row=Row(coordinate);
+    int col=Col(coordinate);
+    if (row==-1 || col==-1) {
+        printf("Invalid coordinate\n");
+        return 0; 
+    }
+
+    int shipsFound = 0;
+    for (int i = row; i < row + 2; i++) {
+        for (int j = col; j < col + 2; j++) {
+            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+                if (smokeGrid[i][j] == 1) {
+                    continue; 
+                }
+                if (grid[i][j] != '~' && grid[i][j] != '*' && grid[i][j] != 'o') {
+                    shipsFound = 1;
+                    break;
+                }
+            }
+        }
+        if (shipsFound) break;
+    }
+
+    if (shipsFound) {
+        printf("Enemy ships found.\n");
+    } else {
+        printf("No enemy ships found.\n");
+    }
+
+    return 1; 
+}
