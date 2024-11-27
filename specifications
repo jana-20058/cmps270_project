@@ -1,0 +1,49 @@
+// Bot Functions
+
+// char matchingCharacters(int index)
+// Requires: Nothing
+// Effects: Returns a char representing the first letter of the ship that has the specified size.
+
+// int botMove(char **opponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **displayedGridBot, int *ship)
+// Requires: Nothing
+// Effects: Calls the best function or move that the bot should perform based on the current conditions.
+
+// void fireBot(char **opponentGrid, int **heatmap, char **displayedGridBot, int *ship)
+// Requires: Nothing
+// Effects: Fires at a suitable cell in the opponent's grid using the heatmap, or fires randomly, potentially prioritizing edges.
+
+// int boundedByMisses(char **displayedGridBot, int col, int row)
+// Requires: Nothing
+// Effects: Returns -1 if all adjacent cells to the one with coordinates (row, col) are misses; otherwise, returns 1.
+
+// void initializeHeatGrid(int **heatGrid)
+// Requires: Nothing
+// Effects: Initializes the given heatmap to zero.
+
+// void updateHeatMap(int col, int row, char result, char *move, int **heatGrid)
+// Requires: Nothing
+// Effects: Updates the given heatmap. If the result is a hit, increases the values of cells adjacent to (row, col). If it's a miss, decreases their values.
+
+// char updateDisplayedGridBot(char **opponentGrid, char **displayedGridBot, int nexti, int nextj, int *ship, int **heatmap)
+// Requires: Nothing
+// Effects: Updates the bot's displayed grid after firing at cell (nexti, nextj), returns the result (HIT/MISS), updates the heatmap, and decrements the size of the corresponding ship in the `ship` array if the result is a hit.
+
+// Common Functions
+
+// int matchingIndices(char element)
+// Requires: Nothing
+// Effects: Returns the size of the ship that starts with the letter represented by `element`.
+
+// void printGrid(char **grid)
+// Requires: Nothing
+// Effects: Prints the grid passed as a parameter.
+
+// Player Functions
+
+// int canPlaceShip(char **grid, char direction, int row, int col, int size)
+// Requires: Nothing
+// Effects: Returns 0 if a ship cannot be placed at the given coordinates (row, col) with the specified size and direction; otherwise, returns 1.
+
+// int artillery(char **opponentGrid, char **displayedGrid, char *coordinate, char *mode, int flag, int *ship)
+// Requires: Nothing
+// Effects: If the move is unlocked (flag == 1), fires a 2x2 grid at the given coordinates, updates the displayed grid of the current player based on the mode (easy/hard), and returns HIT or MISS. If still locked, prints a statement to inform the player.
