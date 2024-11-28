@@ -658,10 +658,7 @@ int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSwe
     }
     int row=Row(coordinate);
     int col=Col(coordinate);
-    if (row==-1 || col==-1) {
-        printf("Invalid coordinate\n");
-        return 0; 
-    }
+    
 
     int shipsFound = 0;
     for (int i = row; i < row + 2; i++) {
@@ -686,4 +683,39 @@ int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSwe
     }
 
     return 1; 
+}
+
+
+void SmokeScreenBot(char **DisplayGridBot, int **heatmap, int *smokeScreensUsedBot) {
+    int row, col;
+
+    
+    do {
+        row = rand() % (GridSize - 1); 
+        col = rand() % (GridSize - 1);
+    } while (!isValidSmokeArea(DisplayGridBot, row, col));
+
+    printf("Bot deploys a 2x2 smoke screen at (%d, %d).\n", row, col);
+
+   
+    for (int i = row; i < row + 2; i++) {
+        for (int j = col; j < col + 2; j++) {
+            heatmap[i][j] = 0;
+            DisplayGridBot[i][j] = 'S'; 
+        }
+    }
+
+    (*smokeScreensUsedBot)++;
+}
+
+
+int isValidSmokeArea(char **DisplayGridBot, int row, int col) {
+    for (int i = row; i < row + 2; i++) {
+        for (int j = col; j < col + 2; j++) {
+            if (i >= GridSize || j >= GridSize || DisplayGridBot[i][j] == 'S') {
+                return 0; 
+            }
+        }
+    }
+    return 1;
 }
