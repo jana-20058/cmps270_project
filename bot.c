@@ -751,3 +751,35 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
 
     return 1;
 }
+
+int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
+    
+    if (smokeScreensUsedBot >= shipsSunk) {
+        printf("The bot cannot use any more smoke screens\n");
+        return 0;
+    }
+
+ 
+    srand(time(NULL));
+    int row = rand() % GridSize;
+    int col = rand() % GridSize;
+
+    
+    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
+
+    
+    for (int i = row; i < row + 2; i++) {
+        for (int j = col; j < col + 2; j++) {
+            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+                smokeGrid[i][j] = 1;
+            }
+        }
+    }
+
+    printf("Bot deployed smoke screen successfully\n");
+
+    
+    smokeScreensUsedBot++;
+
+    return 1;
+}
