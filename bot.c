@@ -778,7 +778,7 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
     coordinate[0] = 'A' + row;
     coordinate[1] = '1' + col;
     coordinate[2] = '\0';
-    
+
   RadarSweep(grid, displayedGrid, coordinate, radarSweepsUsedBot, smokeGrid);
 
     return 1;
@@ -790,11 +790,7 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
 
 
 
-
-
-
-int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
-    
+int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
     if (smokeScreensUsedBot >= shipsSunk) {
         printf("The bot cannot use any more smoke screens\n");
         return 0;
@@ -803,29 +799,22 @@ int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
     int row = -1, col = -1;
     bool foundNewArea = false;
 
-    
+    // Implementing Edge and Corner Bias for Smoke Screen
     for (int i = 0; i < GridSize && !foundNewArea; i++) {
         for (int j = 0; j < GridSize && !foundNewArea; j++) {
-            if (displayedGrid[i][j] == '*' && !visited[i][j]) {
-                
-                for (int x = i - 1; x <= i + 1 && !foundNewArea; x++) {
-                    for (int y = j - 1; y <= j + 1 && !foundNewArea; y++) {
-                        if (x >= 0 && x < GridSize && y >= 0 && y < GridSize && !visited[x][y]) {
-                            row = x;
-                            col = y;
-                            foundNewArea = true;
-                        }
-                    }
-                }
+            if ((i == 0 || i == GridSize - 1 || j == 0 || j == GridSize - 1) && !visited[i][j]) {
+                row = i;
+                col = j;
+                foundNewArea = true;
             }
         }
     }
 
-    
+    // If no edges or corners are found, choose an area near bot's ships (Proximity to Player's Ship Locations)
     if (!foundNewArea) {
-        for (int i = 0; i < GridSize && !foundNewArea; i += 2) {
-            for (int j = 0; j < GridSize && !foundNewArea; j += 2) {
-                if (!visited[i][j]) {
+        for (int i = 0; i < GridSize && !foundNewArea; i++) {
+            for (int j = 0; j < GridSize && !foundNewArea; j++) {
+                if (displayedGrid[i][j] == '*' && !visited[i][j]) {
                     row = i;
                     col = j;
                     foundNewArea = true;
@@ -834,21 +823,30 @@ int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
         }
     }
 
+    // If no new area is found (e.g., all edges and ship areas are covered), use a random area
     if (!foundNewArea) {
         srand(time(NULL));
         do {
-            row = (rand() % (GridSize / 2)) * 2;
-            col = (rand() % (GridSize / 2)) * 2;
+            row = rand() % GridSize;
+            col = rand() % GridSize;
         } while (visited[row][col]);
     }
 
-   
     visited[row][col] = true;
 
-    
-    printf("Bot chose radar sweep coordinates: %c%d\n", 'A' + row, col + 1);
+    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
 
+    // Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
+    for (int i = row; i < row + 2; i++) {
+        for (int j = col; j < col + 2; j++) {
+            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+                smokeGrid[i][j] = 1;
+            }
+        }
+    }
+
+    printf("Bot deployed smoke screen successfully\n");
+   return 1;
 }
-
 
 
