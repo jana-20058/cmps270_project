@@ -314,6 +314,7 @@ int BoundedByMisses(char **DisplayedGridBot,int col,int row){
 
 int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **DisplayedGridBot, int *ship)
 {
+    int smokeGrid[GridSize][GridSize] = {0};
     if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
     {printf("check check !!");
         torpedo(oponentGrid, DisplayedGridBot, ship,heatmap);
@@ -322,13 +323,19 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
     {
         // Artillery()
     }
-    if (radarSweepsBot != 3)
+     if (radarSweepsUsedBot < 3)
     {
-        // Radarsweep()
+        printf("Radar sweep in progress...\n");
+        RadarSweepBot(oponentGrid, DisplayedGridBot, radarSweepsUsedBot, smokeGrid);
+    }
+    else
+    {
+        printf("The bot has used all radar sweeps.\n");
     }
     if (flagShipSunkInCurrentTurn > 0 && smokeScreensUsedBot < totalNumberOfShipsSunkByBot)
     {
-        // Smoke()
+         printf("Bot is considering deploying a smoke screen...\n");
+        SmokeScreenBot(smokeGrid, totalNumberOfShipsSunkByBot, smokeScreensUsedBot);
     }
     else
     {
@@ -708,7 +715,7 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
 }
 
 
-int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
+int RadarSweepBot(char **grid, char **displayedGrid,  radarSweepsUsedBot, int **smokeGrid) {
    
     if (radarSweepsUsedBot >= 3) {
         printf("The bot has used all of its radar sweeps\n");
@@ -752,7 +759,7 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
     return 1;
 }
 
-int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
+int SmokeScreenBot(int **smokeGrid, int shipsSunk,  smokeScreensUsedBot) {
     
     if (smokeScreensUsedBot >= shipsSunk) {
         printf("The bot cannot use any more smoke screens\n");
