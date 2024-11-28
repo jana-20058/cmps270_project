@@ -715,7 +715,7 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
 }
 
 
-int RadarSweepBot(char **grid, char **displayedGrid,  radarSweepsUsedBot, int **smokeGrid) {
+int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
    
     if (radarSweepsUsedBot >= 3) {
         printf("The bot has used all of its radar sweeps\n");
@@ -759,7 +759,7 @@ int RadarSweepBot(char **grid, char **displayedGrid,  radarSweepsUsedBot, int **
     return 1;
 }
 
-int SmokeScreenBot(int **smokeGrid, int shipsSunk,  smokeScreensUsedBot) {
+int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
     
     if (smokeScreensUsedBot >= shipsSunk) {
         printf("The bot cannot use any more smoke screens\n");
