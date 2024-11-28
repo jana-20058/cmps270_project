@@ -6,6 +6,8 @@ int hits=0;
 
 int totalNumberOfShipsSunkByBot = 0;
 int flagShipSunkInCurrentTurn = 0;
+int smokeScreensUsedBot=0;
+int radarSweepsUsedBot=0;
 
 char matchingCharacters(int index);
 void ShipPlacment(char **grid);
