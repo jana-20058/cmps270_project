@@ -715,22 +715,21 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
 }
 
 
-int RadarSweepBot(char **grid, char **displayedGrid,  radarSweepsUsedBot, int **smokeGrid) {
-   
-    if (radarSweepsUsedBot >= 3) {
-        printf("The bot has used all of its radar sweeps\n");
-        return 0;
+
+bool visited[GridSize][GridSize] = {false}; 
+
+int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid) {
+    if (radarSweepsUsed >= 3) {
+        printf("You have used all your radar sweeps\n");
+        return 0; 
+    }
+    int row=Row(coordinate);
+    int col=Col(coordinate);
+    if (row==-1 || col==-1) {
+        printf("Invalid coordinate\n");
+        return 0; 
     }
 
-   
-    srand(time(NULL));
-    int row = rand() % GridSize;
-    int col = rand() % GridSize;
-
-    
-    printf("Bot chose radar sweep coordinates: %c%d\n", 'A' + row, col + 1);
-
-    
     int shipsFound = 0;
     for (int i = row; i < row + 2; i++) {
         for (int j = col; j < col + 2; j++) {
@@ -748,45 +747,101 @@ int RadarSweepBot(char **grid, char **displayedGrid,  radarSweepsUsedBot, int **
     }
 
     if (shipsFound) {
-        printf("Bot's radar found enemy ships at the specified location.\n");
+        printf("Enemy ships found.\n");
     } else {
-        printf("Bot's radar found no enemy ships at the specified location.\n");
+        printf("No enemy ships found.\n");
     }
 
- 
-    radarSweepsUsedBot++;
-
-    return 1;
+    return 1; 
 }
 
-int SmokeScreenBot(int **smokeGrid, int shipsSunk,  smokeScreensUsedBot) {
-    
-    if (smokeScreensUsedBot >= shipsSunk) {
-        printf("The bot cannot use any more smoke screens\n");
+int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
+   
+    if (radarSweepsUsedBot >= 3) {
+        printf("The bot has used all of its radar sweeps\n");
         return 0;
     }
 
- 
-    srand(time(NULL));
-    int row = rand() % GridSize;
-    int col = rand() % GridSize;
+    int row = -1, col = -1;
+    bool foundNewArea = false;
 
     
-    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
-
-    
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
-            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
-                smokeGrid[i][j] = 1;
+    for (int i = 0; i < GridSize && !foundNewArea; i++) {
+        for (int j = 0; j < GridSize && !foundNewArea; j++) {
+            if (displayedGrid[i][j] == '*' && !visited[i][j]) {
+                
+                for (int x = i - 1; x <= i + 1 && !foundNewArea; x++) {
+                    for (int y = j - 1; y <= j + 1 && !foundNewArea; y++) {
+                        if (x >= 0 && x < GridSize && y >= 0 && y < GridSize && !visited[x][y]) {
+                            row = x;
+                            col = y;
+                            foundNewArea = true;
+                        }
+                    }
+                }
             }
         }
     }
 
-    printf("Bot deployed smoke screen successfully\n");
+    
+    if (!foundNewArea) {
+        for (int i = 0; i < GridSize && !foundNewArea; i += 2) {
+            for (int j = 0; j < GridSize && !foundNewArea; j += 2) {
+                if (!visited[i][j]) {
+                    row = i;
+                    col = j;
+                    foundNewArea = true;
+                }
+            }
+        }
+    }
+
+    if (!foundNewArea) {
+        srand(time(NULL));
+        do {
+            row = (rand() % (GridSize / 2)) * 2;
+            col = (rand() % (GridSize / 2)) * 2;
+        } while (visited[row][col]);
+    }
+
+   
+    visited[row][col] = true;
 
     
-    smokeScreensUsedBot++;
+    printf("Bot chose radar sweep coordinates: %c%d\n", 'A' + row, col + 1);
 
-    return 1;
-}
+SmokeScreenBot( **smokeGrid,  totalNumberOfShipsSunkByBot,  smokeScreensUsedBot);}
+
+
+
+// int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot) {
+    
+//     if (smokeScreensUsedBot >= shipsSunk) {
+//         printf("The bot cannot use any more smoke screens\n");
+//         return 0;
+//     }
+
+ 
+//     srand(time(NULL));
+//     int row = rand() % GridSize;
+//     int col = rand() % GridSize;
+
+    
+//     printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
+
+    
+//     for (int i = row; i < row + 2; i++) {
+//         for (int j = col; j < col + 2; j++) {
+//             if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+//                 smokeGrid[i][j] = 1;
+//             }
+//         }
+//     }
+
+//     printf("Bot deployed smoke screen successfully\n");
+
+    
+//     smokeScreensUsedBot++;
+
+//     return 1;
+// }
