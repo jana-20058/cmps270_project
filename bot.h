@@ -21,4 +21,6 @@ char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int next
 int  ShipsSunkByBot(int *ship);
 void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship);
 char matching(int index);
+int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot);
+int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid);
 #endif
