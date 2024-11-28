@@ -706,15 +706,24 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
             }
         }
 }
-int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid) {
-    if (radarSweepsUsed >= 3) {
-        printf("You have used all your radar sweeps\n");
-        return 0; 
-    }
-    int row=Row(coordinate);
-    int col=Col(coordinate);
-    
 
+
+int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
+   
+    if (radarSweepsUsedBot >= 3) {
+        printf("The bot has used all of its radar sweeps\n");
+        return 0;
+    }
+
+   
+    srand(time(NULL));
+    int row = rand() % GridSize;
+    int col = rand() % GridSize;
+
+    
+    printf("Bot chose radar sweep coordinates: %c%d\n", 'A' + row, col + 1);
+
+    
     int shipsFound = 0;
     for (int i = row; i < row + 2; i++) {
         for (int j = col; j < col + 2; j++) {
@@ -732,10 +741,13 @@ int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSwe
     }
 
     if (shipsFound) {
-        printf("Enemy ships found.\n");
+        printf("Bot's radar found enemy ships at the specified location.\n");
     } else {
-        printf("No enemy ships found.\n");
+        printf("Bot's radar found no enemy ships at the specified location.\n");
     }
 
-    return 1; 
+ 
+    radarSweepsUsedBot++;
+
+    return 1;
 }
