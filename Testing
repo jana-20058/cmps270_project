@@ -1,0 +1,127 @@
+matchingCharacters Function
+Test Cases:
+
+1.pass as an argument any size of the ships (Battleship, Carrier, Submarine, Destroyer):
+This case ensures that the function correctly handles the situation when the size matches one of the ship sizes represented by the letters(d,B,).
+Expected Output: The  letter that represent the ship who's size matches the passed size.
+
+2.pass as an argument  any arbitrary Size that doesn’t match the size of any ship (not 5, 4, 3, or 2)
+This case ensures that the function correctly handles the situation when the size doesn’t match any of the ship sizes.
+Expected Output: Return -1.
+
+matchingIndices Function
+Test Cases:
+
+1.Pass as an argument any of the letters representing the ships (C, d, B, s):
+This case ensures that the function correctly handles and matches the letter passed with size of ship it represent.
+Expected Output:size of ship that is represented by the letter passed
+
+2.Passas an argument  any letter other than (C, d, B, s):
+This case ensures that the function correctly handles the situation when the letter doesn’t represent any ship.
+Expected Output: Return -1.
+
+printgrid Function
+Test Cases:
+
+1.Pass as an argument a grid initialized with ~:
+This case ensures that the grid is printed correctly, with rows numbered from 1 to 10 and columns labeled with letters from A to J.
+Expected Output: A copy of the grid is printed.
+
+canPlaceShip Function
+Test Cases:
+
+1.Pass  as an argument  the player’s grid with a either  directions Horizontal(H) or Vertical(V) and legal coordinates (within bounds and without overlap):
+This test case ensures  that the function correctly handles coordinates that are neither out of bounds nor overlapping.
+Expected Output: Returns 1, indicating that the ship can be placed at this cell.
+
+2.Pass  as an argument the player’s grid with  either  directions Horizontal(H) or Vertical(V) and coordinates that violate boundary constraints (out of bounds):
+This case ensures that the function correctly handles coordinates that are out of bounds.
+Expected Output: Returns -1, indicating that the ship cannot be placed at this cell.
+
+3.Pass  as an argument the player’s grid with a direction (Horizontal or Vertical) and coordinates that overlap with other ships:
+This case ensures that the function correctly handles overlapping coordinates.
+Expected Output: Returns -1, indicating that the ship cannot be placed at this cell.
+
+boundedByMisses Function
+Test Cases:
+
+1.Pass  as an argument the coordinate of a cell(row,col) bounded by misses and not on the edges (row=9, col=9, col=0, row=0)or corners
+This case ensures that the function correctly handles cells bounded by misses in the middle of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+2.Pass  as an argument  a coordinate of a cell(row,col) bounded by misses and located in a corner ((0,0), (0,9), (9,0), (9,9)):
+This case ensures that the  function correctly handles cells bounded by misses in at the edges of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+3.Pass a coordinate of a cell bounded by misses and located on the edges but not in a corner (row=9, col=9, col=0, row=0):
+This case ensures that the  function correctly handles cells bounded by misses  at the corner of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+4.Pass a coordinate of a cell that is not bounded by misses (either in the middle, on the edge, or in a corner):
+This case ensures that the function correctly handles cells not bounded by misses.
+Expected Output: Returns 1, indicating that the cell is not bounded by misses.
+
+artillery Function
+Test Cases:
+
+1.pass as an argument flag = 0
+This case ensures that function correctly handle the case when move is locked.
+Expected Output: Prints: "You cannot use this move yet. Sink one ship of your opponent in the current turn to unlock it for the next turn."
+
+2.Pass as an argument coordinate of cell(row,col) that is out of bounds (either row or column, or both):
+This case ensures that the function correctly handles out-of-bounds coordinates.
+Expected Output: Prints: "Invalid input!"
+
+3.pass as an argument flag = 1, mode = 'easy,' and a valid  2x2 grid 
+This case ensures that function correctly fires at the 2x2 grid and represents hits with * and misses with o.
+Expected Output: If at least one cell in the grid is hit, prints: "HIT". Otherwise, prints: "MISS".
+
+3.pass as an argument flag = 1, mode = 'hard' and a valid  2x2 grid
+This case ensures that the function correctly fires at the 2x2 grid, representing only hits with * (misses are not represented ).
+Expected Output: If at least one cell in the grid is hit, prints: "HIT". Otherwise, prints: "MISS".
+
+4.pass as an argument  flag i= 1, any mode (easy or hard), and the 2x2 grid is invalid (one cell out of bounds):
+This case ensures that the function correctly handles invalid grids.
+Expected Output: Prints: "Invalid input/area is out of bounds."
+
+//will be adjusted later on when other functions are implmented
+updateHeatMap Function
+Test Cases:
+
+1.Pass as an argument the result as a hit (*) and the move as 'fire':
+This case ensures that the heatmap grid is correctly updated when the result is a hit and move is fire .
+Expected Output: Prioritize adjacent cells by adding 5 to their value and cells adjacent to those by adding 2.
+
+2.Pass as an argument the result as a miss (o) and the move as 'fire':
+This case ensures that the heatmap grid is correctly updated when the result is a miss and move is fire.
+Expected Output: Decrement adjacent cells by subtracting 1 from their value and cells adjacent to those by subtracting 1
+//will be adjusted later on when other functions are implmented
+botmove Function
+Test Cases:
+
+1.No ship has sunk in the previous turn (flagShipSunkInCurrentTurn == 1), and the number of ships sunk equals 3 (totalNumberOfShipsSunkByBot >= 3):
+This case ensures the function correctly calls the torpedo move.
+Expected Output: Calls the torpedo function.
+
+2.The number of times the smoke screen is used equals the number of ships sunk (smokeScreensUsedBot = totalNumberOfShipsSunkByBot), radar sweep is unavailable (radarSweepsBot > 3), and no ship has sunk in the previous turn (flagShipSunkInCurrentTurn = 0):
+This case ensures the function correctly defaults to the 'fire' move.
+Expected Output: Calls the fire function.
+
+initializeHeatGrid Function
+Test Cases:
+
+1.Passas an argument a dynamically allocated 2D array on the heap:
+Expected Output: Dynamically allocate 10 arrays for the 2D array and initialize every cell to 0.
+
+updateDisplayedGridBot Function
+Test Cases:
+
+1.Pass an argument  coordinates (nexti and nextj) corresponding to a cell occupied by a ship in the opponent's grid:
+This case ensures the bot’s displayed grid is correctly updated to * at this cell, and the size of the corresponding ship is decremented.
+Expected Output: Returns *, updates the bot's displayed grid  at this cell to *.
+
+2.Pass as an argument coordinates (nexti and nextj) corresponding to a cell not occupied by a ship in the opponent's grid:
+This case ensures the bot’s displayed grid is correctly updated to o at this cell. 
+Expected Output: Returns o, updates the bot's displayed grid to o at this cell.
+
+
