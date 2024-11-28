@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include "common_functions.h"
 #include "bot.h"
+#include <stdbool.h>
 
 #define GridSize 10
 #define ShipNumber 4
@@ -152,10 +152,11 @@ void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
                     heatGrid[adjRow][adjCol] += 2;
                 }
             }
+           
         }
         else if (result == 'o')
         {
-            misses++;
+            
             heatGrid[row][col] = 0;
 
             for (int i = 0; i < 4; i++)
@@ -283,13 +284,39 @@ int *checkedge(char **DisplayedGridBot)
     }
     return arr;
 }
+int BoundedByMisses(char **DisplayedGridBot,int col,int row){
+    if(col!=0&&col!=9&&row!=0&&row!=9 &&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col-1]=='o'
+    &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row-1][col]=='o'){
+            return -1;
+        }
+    
+    
+    
+  else if(col==0&&row==0&&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'
+   ||col==9&&row==9&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'||
+   col==0&&row==9&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'||
+   col==9&&row==0&&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'){
+    return -1;
+   }
+
+  else if(col==0 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row+1][col]=='o'
+  ||col==9 &&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row+1][col]||
+  row==0 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row+1][col]=='o'||
+  row==9 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'){
+    return -1;
+
+  }
+  else {
+    return 1;
+  }
+    
+}
 
 int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **DisplayedGridBot, int *ship)
 {
     if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
-    {
-        printf("check check !!");
-        torpedo(oponentGrid, DisplayedGridBot, ship);
+    {printf("check check !!");
+        torpedo(oponentGrid, DisplayedGridBot, ship,heatmap);
     }
     if (flagShipSunkInCurrentTurn == 1)
     {
@@ -338,18 +365,23 @@ void FireBot(char **opponentGrid, int **heatmap, char **DisplayGridBot, int *shi
 
         char result = updateDisplayedGridBot(opponentGrid, DisplayGridBot, nexti, nextj, ship, heatmap);
     }
-    else if (misses >= 3 && misses <= 8)
+    else if (misses >= 3 && misses <= 8&&hits<=4)
     {
         int *arr = checkedge(DisplayGridBot);
-        if (checkIndex(arr[0], arr[1]))
+        if (BoundedByMisses(opponentGrid,arr[0],arr[1])==1&&checkIndex(arr[0],arr[1]))
         {
             nexti = arr[0];
             nextj = arr[1];
         }
+        else{
+            int *arr = heatmapvalue(heatmap, DisplayGridBot,opponentGrid);
+        nexti = arr[0];
+        nextj = arr[1]; 
+        }
     }
     else
     {
-        int *arr = heatmapvalue(heatmap, DisplayGridBot);
+        int *arr = heatmapvalue(heatmap, DisplayGridBot,opponentGrid);
         nexti = arr[0];
         nextj = arr[1];
     }
@@ -362,7 +394,7 @@ void FireBot(char **opponentGrid, int **heatmap, char **DisplayGridBot, int *shi
         fires++;
     }
 }
-int *heatmapvalue(int **heatmap, char **DisplayGridBot)
+int *heatmapvalue(int **heatmap, char **DisplayGridBot,char**opponentGrid)
 {
     int count = 0, max = -1;
     int *array = (int *)malloc(sizeof(int) * 2);
@@ -389,57 +421,19 @@ int *heatmapvalue(int **heatmap, char **DisplayGridBot)
     }
     if (count > 0)
     {
-        int maxEdgeBias = -1;
-        int edgeCandidates[GridSize * GridSize][2];
-        int edgeCount = 0;
-
-        // Evaluate edge bias for candidates
-        for (int i = 0; i < count; i++)
-        {
-            int r = candidates[i][0];
-            int c = candidates[i][1];
-            int edgeBias = 0;
-
-            // Calculate edge bias
-            if (r == 0 || c == 0 || r == GridSize - 1 || c == GridSize - 1)
-            {
-                edgeBias += 2; // Edge
-            }
-            if ((r == 0 && c == 0) || (r == 0 && c == GridSize - 1) ||
-                (r == GridSize - 1 && c == 0) || (r == GridSize - 1 && c == GridSize - 1))
-            {
-                edgeBias += 3; // Corner
-            }
-
-            // Update edgeCandidates based on edgeBias
-            if (edgeBias > maxEdgeBias)
-            {
-                maxEdgeBias = edgeBias;
-                edgeCount = 0;
-                edgeCandidates[edgeCount][0] = r;
-                edgeCandidates[edgeCount][1] = c;
-                edgeCount++;
-            }
-            else if (edgeBias == maxEdgeBias)
-            {
-                edgeCandidates[edgeCount][0] = r;
-                edgeCandidates[edgeCount][1] = c;
-                edgeCount++;
-            }
-        }
-
-        if (edgeCount > 0)
-        {
-            int choice = rand() % edgeCount;
-            array[0] = edgeCandidates[choice][0];
-            array[1] = edgeCandidates[choice][1];
-        }
-        else
-        {
+      
+        
             int choice = rand() % count;
             array[0] = candidates[choice][0];
             array[1] = candidates[choice][1];
+        
+    }
+    if(BoundedByMisses(opponentGrid,array[0],array[1])==-1){
+        do{
+            array[0]=rand()%GridSize;
+            array[1]=rand()%GridSize;
         }
+        while(heatmap[array[0]][array[1]]==0);
     }
     return array;
 }
@@ -449,7 +443,8 @@ char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int next
     char result;
     if (isalpha(opponentGrid[nexti][nextj]) && heatmap[nexti][nextj] != 0)
     {
-        result = DisplayGridBot[nexti][nextj] = '*'; // Hit
+        result = DisplayGridBot[nexti][nextj] = '*';
+        hits++; // Hit
         int num = matchingIndecies(opponentGrid[nexti][nextj]);
         if (num != -1 && ship[num] > 0)
         {
@@ -458,7 +453,8 @@ char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int next
     }
     else
     {
-        result = DisplayGridBot[nexti][nextj] = 'o'; // Miss
+        result = DisplayGridBot[nexti][nextj] = 'o';
+        misses++; // Miss
     }
     return result;
 }
@@ -520,8 +516,8 @@ char matching(int index)
         break;
     }
 }
-
-void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship)
+// Function for torpedoing
+void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship,int ** heatmap)
 {
     coordinate arr[12];
     for (int i = 0; i < 12; i++)
@@ -529,12 +525,7 @@ void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship)
         arr[i].row = -1;
         arr[i].col = -1;
     }
-    // will be removed shortly
-    for (int i = 0; i < 12; i++)
-    {
-        printf("\n The coordinates :%d  , %d )", arr[i].row, arr[i].col);
-    }
-
+   
     int index = 0;
     for (int i = 0; i < 4; i++)
     {
@@ -602,10 +593,99 @@ for (int K = 0; K < GridSize; K++) {
     printf("\nCol For torpedo %d", columnToApplyTorpedo);
     printf("\nRow For torpedo %d", rowToApplyTorpedo);
 
-    if (maxHitsCol <= maxHitsRow)
+    if (maxHitsCol !=0&& maxHitsRow!=0)
     {
-        // call torpedo on the Row
-        for (int i = 0; i < GridSize; i++)
+        if(maxHitsCol<maxHitsRow){
+      torpedoRow(DisplayedBotGrid,rowToApplyTorpedo,opponentGrid, ship);
+    }
+    else if(maxHitsCol>maxHitsRow){
+       torpedoCol(DisplayedBotGrid, columnToApplyTorpedo, opponentGrid, ship);
+    }
+    else{
+        int choice=rand()%2;
+        if(choice==0){
+             torpedoRow(DisplayedBotGrid,rowToApplyTorpedo,opponentGrid, ship);
+        }
+        else{
+             torpedoCol(DisplayedBotGrid, columnToApplyTorpedo, opponentGrid, ship);
+        }
+    }}
+else {
+        
+        int maxRowSum = -1, maxColSum = -1;
+
+      char targetType ; 
+      int targetRow=0;
+      int targetcol=0;
+        for (int i = 0; i < GridSize; i++) {
+            int rowSum = 0;
+            for (int j = 0; j < GridSize; j++) {
+                rowSum += heatmap[i][j];
+            }
+            if (rowSum > maxRowSum) {
+                maxRowSum = rowSum;
+                targetRow = i;
+                
+            }
+        }
+
+      
+        for (int j = 0; j < GridSize; j++) {
+            int colSum = 0;
+            for (int i = 0; i < GridSize; i++) {
+                colSum += heatmap[i][j];
+            }
+            if (colSum > maxColSum) {
+                maxColSum = colSum;
+                targetcol = j;
+                
+            }
+        }
+         if(maxColSum<maxRowSum){
+      torpedoRow(DisplayedBotGrid,rowToApplyTorpedo,opponentGrid, ship);
+    }
+    else if(maxColSum>maxRowSum){
+        torpedoCol(DisplayedBotGrid, columnToApplyTorpedo, opponentGrid, ship);
+    }
+    else{
+        int choice=rand()%2;
+        if(choice==0){
+             torpedoRow(DisplayedBotGrid,rowToApplyTorpedo,opponentGrid, ship);
+        }
+        else{
+             torpedoCol(DisplayedBotGrid, columnToApplyTorpedo, opponentGrid, ship);
+        }
+    }
+
+}
+}
+void torpedoCol(char** DisplayedBotGrid,int columnToApplyTorpedo,char** opponentGrid,int* ship){
+  for (int i = 0; i < GridSize; i++)
+        {
+            if (DisplayedBotGrid[i][columnToApplyTorpedo] == '*' || DisplayedBotGrid[i][columnToApplyTorpedo] == 'o')
+            {
+                continue;
+            }
+            else if (isalpha(opponentGrid[i][columnToApplyTorpedo]))
+            {
+                int n = matchingIndecies(opponentGrid[i][columnToApplyTorpedo]);
+                if (n != -1)
+                {
+                    ship[n]--;
+                }
+                DisplayedBotGrid[i][columnToApplyTorpedo] = '*';
+                hits++;
+            }
+            else
+            {
+                misses++;
+                DisplayedBotGrid[i][columnToApplyTorpedo] = 'o';
+            }
+        }
+    }
+
+void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGrid,int* ship){
+  for (int i = 0; i < GridSize; i++)
         {
             if (DisplayedBotGrid[rowToApplyTorpedo][i] == '*' || DisplayedBotGrid[rowToApplyTorpedo][i] == 'o')
             {
@@ -625,31 +705,6 @@ for (int K = 0; K < GridSize; K++) {
                 DisplayedBotGrid[rowToApplyTorpedo][i] = 'o';
             }
         }
-    }
-    else
-    {
-        // call torpedo on col
-        for (int i = 0; i < GridSize; i++)
-        {
-            if (DisplayedBotGrid[i][columnToApplyTorpedo] == '*' || DisplayedBotGrid[i][columnToApplyTorpedo] == 'o')
-            {
-                continue;
-            }
-            else if (isalpha(opponentGrid[i][columnToApplyTorpedo]))
-            {
-                int n = matchingIndecies(opponentGrid[i][columnToApplyTorpedo]);
-                if (n != -1)
-                {
-                    ship[n]--;
-                }
-                DisplayedBotGrid[i][columnToApplyTorpedo] = '*';
-            }
-            else
-            {
-                DisplayedBotGrid[i][columnToApplyTorpedo] = 'o';
-            }
-        }
-    }
 }
 int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid) {
     if (radarSweepsUsed >= 3) {
@@ -683,39 +738,4 @@ int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSwe
     }
 
     return 1; 
-}
-
-
-void SmokeScreenBot(char **DisplayGridBot, int **heatmap, int *smokeScreensUsedBot) {
-    int row, col;
-
-    
-    do {
-        row = rand() % (GridSize - 1); 
-        col = rand() % (GridSize - 1);
-    } while (!isValidSmokeArea(DisplayGridBot, row, col));
-
-    printf("Bot deploys a 2x2 smoke screen at (%d, %d).\n", row, col);
-
-   
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
-            heatmap[i][j] = 0;
-            DisplayGridBot[i][j] = 'S'; 
-        }
-    }
-
-    (*smokeScreensUsedBot)++;
-}
-
-
-int isValidSmokeArea(char **DisplayGridBot, int row, int col) {
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
-            if (i >= GridSize || j >= GridSize || DisplayGridBot[i][j] == 'S') {
-                return 0; 
-            }
-        }
-    }
-    return 1;
 }
