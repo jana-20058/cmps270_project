@@ -732,7 +732,36 @@ int compareCells(const void *a, const void *b, void *heatmap_void) {
     int colB = ((int *)b)[1];
    
     return heatmap[rowB][colB] - heatmap[rowA][colA];
+
+
 }
+
+// Helper function to check if a cell is adjacent to any sunk ship
+bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship) {
+    
+    int dRow[] = {-1, 1, 0, 0, -1, -1, 1, 1};
+    int dCol[] = {0, 0, 1, -1, 1, -1, 1, -1};
+   
+    for (int i = 0; i < 8; i++) {
+        int adjRow = row + dRow[i];
+        int adjCol = col + dCol[i];
+       
+        if (adjRow >= 0 && adjRow < GridSize && adjCol >= 0 && adjCol < GridSize) {
+            char cell = opponentGrid[adjRow][adjCol];
+            if (isalpha(cell)) {
+
+                int shipIndex = matchingIndecies(cell);
+                if (shipIndex != -1 && ship[shipIndex] == -1) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+
 
 int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
    

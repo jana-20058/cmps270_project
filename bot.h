@@ -1,5 +1,6 @@
 #ifndef BOT_H
 #define BOT_H
+#include <stdbool.h>
  int misses = 0;
  int fires = 0;
 int hits=0;
@@ -24,7 +25,8 @@ int  ShipsSunkByBot(int *ship);
 void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship,int ** heatmap);
 char matching(int index);
 int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot);
-int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid);
+//int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid);
 void torpedoCol(char** DisplayedBotGrid,int columnToApplyTorpedo,char** opponentGrid,int* ship);
 void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGrid,int* ship);
+bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship);
 #endif
