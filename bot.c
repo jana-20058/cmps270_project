@@ -17,6 +17,10 @@ typedef struct
     int col;
 } coordinate;
 
+
+
+
+
 char matchingCharacters(int length)
 {
 
@@ -719,7 +723,16 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
 
 bool visited[GridSize][GridSize] = {false}; 
 
-
+// Comparator function for sorting cells based on heatmap values in descending order
+int compareCells(const void *a, const void *b, void *heatmap_void) {
+    int **heatmap = (int **)heatmap_void;
+    int rowA = ((int *)a)[0];
+    int colA = ((int *)a)[1];
+    int rowB = ((int *)b)[0];
+    int colB = ((int *)b)[1];
+   
+    return heatmap[rowB][colB] - heatmap[rowA][colA];
+}
 
 int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int **smokeGrid) {
    
@@ -772,7 +785,7 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
    
     visited[row][col] = true;
 
-    
+                            
     printf("Bot chose radar sweep coordinates: %c%d\n", 'A' + row, col + 1);
    char coordinate[3];
     coordinate[0] = 'A' + row;
@@ -788,9 +801,7 @@ int RadarSweepBot(char **grid, char **displayedGrid, int radarSweepsUsedBot, int
 
 
 
-
-
-int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
+int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
     if (smokeScreensUsedBot >= shipsSunk) {
         printf("The bot cannot use any more smoke screens\n");
         return 0;
