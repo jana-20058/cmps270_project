@@ -933,6 +933,39 @@ list[index].col=j;
 
 }
 
+char * GetGreatestArea(int** heatmap,int row,int col){
+int RowCoordinate[] = {-2, 2, 0, 0}; 
+int ColumnCoordinate[] = {0, 0, -2, 2}; 
+char *directions[] = {"above", "below", "left", "right"};
+
+for (int i = 0; i < GridSize; i++) {
+    for (int j = 0; j < GridSize; j++) {
+            int maxHeat = -1;
+            char *bestDirection = NULL;
+            for (int K = 0; K < 4; K++) {
+                int sumHeat = 0;
+                int Row = i + RowCoordinate[K];
+                int Col = j + ColumnCoordinate[K];
+
+                for (int r = Row; r < Row + 2; r++) {
+                    for (int c = Col; c < Col + 2; c++) {
+                        if (r >= 0 && r < GridSize && c >= 0 && c < GridSize) {
+                            sumHeat += heatmap[r][c];
+                        }
+                    }
+                }
+
+               //check the max e
+                if (sumHeat > maxHeat) {
+                    maxHeat = sumHeat;
+                    bestDirection = directions[K];
+                }
+            }
+             return bestDirection;
+        }
+    }
+}
+
 
 
 int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
