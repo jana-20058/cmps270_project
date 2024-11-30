@@ -323,12 +323,12 @@ int BoundedByMisses(char **DisplayedGridBot,int col,int row){
   else if(col==0&&row==0&&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'
    ||col==9&&row==9&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'||
    col==0&&row==9&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'||
-   col==9&&row==0&&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col+1]=='o'){
+   col==9&&row==0&&DisplayedGridBot[row+1][col]=='o'&&DisplayedGridBot[row][col-1]=='o'){
     return -1;
    }
 
   else if(col==0 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row+1][col]=='o'
-  ||col==9 &&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row+1][col]||
+  ||col==9 &&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'&&DisplayedGridBot[row+1][col]='o'||
   row==0 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row+1][col]=='o'||
   row==9 &&DisplayedGridBot[row][col+1]=='o'&&DisplayedGridBot[row][col-1]=='o'&&DisplayedGridBot[row-1][col]=='o'){
     return -1;
@@ -346,19 +346,10 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
     {printf("check check !!");
         torpedo(oponentGrid, DisplayedGridBot, ship,heatmap);
     }
+        printf("Before ArtilleryBot condition, flagShipSunkInCurrentTurn: %d\n", flagShipSunkInCurrentTurn);
     if (flagShipSunkInCurrentTurn == 1)
     {
-        int targetRow = rand() % GridSize;  
-    int targetCol = rand() % GridSize;  
-
-    
-    while (displayedGridBot[targetRow][targetCol] != '~') {
-        targetRow = rand() % GridSize;
-        targetCol = rand() % GridSize;
-    }
-
-   
-    Artillery(opponentGrid, displayedGridBot, targetRow, targetCol);
+     ArtilleryBot(heatmap,ship,DisplayedGridBot,NULL,oponentGrid); 
     }
     if (radarSweepsBot > 3)
     {
@@ -554,7 +545,7 @@ char matching(int index)
         break;
     }
 }
-bool** sunkships(int** ship,int**opponentGrid,int** DisplayedBotGrid){
+bool** sunkships(int** ship,char**opponentGrid,char** DisplayedBotGrid){
     
     coordinate arr[12];
     for (int i = 0; i < 12; i++)
@@ -933,40 +924,6 @@ list[index].col=j;
 
 }
 
-char * GetGreatestArea(int** heatmap,int row,int col){
-int RowCoordinate[] = {-2, 2, 0, 0}; 
-int ColumnCoordinate[] = {0, 0, -2, 2}; 
-char *directions[] = {"above", "below", "left", "right"};
-
-for (int i = 0; i < GridSize; i++) {
-    for (int j = 0; j < GridSize; j++) {
-            int maxHeat = -1;
-            char *bestDirection = NULL;
-            for (int K = 0; K < 4; K++) {
-                int sumHeat = 0;
-                int Row = i + RowCoordinate[K];
-                int Col = j + ColumnCoordinate[K];
-
-                for (int r = Row; r < Row + 2; r++) {
-                    for (int c = Col; c < Col + 2; c++) {
-                        if (r >= 0 && r < GridSize && c >= 0 && c < GridSize) {
-                            sumHeat += heatmap[r][c];
-                        }
-                    }
-                }
-
-               //check the max e
-                if (sumHeat > maxHeat) {
-                    maxHeat = sumHeat;
-                    bestDirection = directions[K];
-                }
-            }
-             return bestDirection;
-        }
-    }
-}
-
-
 
 int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
     if (smokeScreensUsedBot >= shipsSunk) {
@@ -1066,3 +1023,164 @@ bool isTargetPresent(int row, int col) {
         }
     }
 }
+    bool **isShip = malloc(GridSize * sizeof(bool *));
+    for (int i = 0; i < GridSize; i++)
+    {
+        isShip[i] = malloc(GridSize * sizeof(bool));
+        for (int j = 0; j < GridSize; j++)
+        {
+            isShip[i][j] = false;
+        }
+    }
+    for (int i = 0; i < index; i++)
+    {
+        if (arr[i].row >= 0 && arr[i].row < GridSize &&
+            arr[i].col >= 0 && arr[i].col < GridSize)
+        {
+            isShip[arr[i].row][arr[i].col] = true; // set the ships in the list as true
+        }
+    }
+    return isShip;
+}
+ void findHighest2x2Grid(int** heatmap, int**Grid){
+
+    int maxSum = -1;
+
+    for (int i = 0; i < GridSize - 1; i++) {
+        for (int j = 0; j < GridSize - 1; j++) {
+            int sum = heatmap[i][j] + heatmap[i][j + 1] + heatmap[i + 1][j] + heatmap[i + 1][j + 1];
+
+            if (sum > maxSum) {
+                maxSum = sum;
+
+                Grid[0][0] = i;
+                Grid[0][1] = j;
+                Grid[1][0] = i;
+                Grid[1][1] = j + 1;
+                Grid[2][0] = i + 1;
+                Grid[2][1] = j;
+                Grid[3][0] = i + 1;
+                Grid[3][1] = j + 1;
+            }
+        }
+    }
+   
+}// Updated GetGreatestArea function
+char GetGreatestArea(int** heatmap, int row, int col) {
+    int RowCoordinate[] = {-2, 2, 0, 0};  
+    int ColumnCoordinate[] = {0, 0, -2, 2}; 
+    char directions[] = {'A', 'B', 'L', 'R'};  
+    int maxHeat = -1;  
+    char bestDirection = 'N';  
+
+    for (int K = 0; K < 4; K++) {  
+        int startRow = row + RowCoordinate[K];
+        int startCol = col + ColumnCoordinate[K];
+
+        // Ensure the starting point and the 2x2 grid stay within bounds
+        if (startRow >= 0 && startRow + 1 < GridSize && startCol >= 0 && startCol + 1 < GridSize) {
+            int sumHeat = 0;
+
+            // Loop over the 2x2 grid starting at (startRow, startCol)
+            for (int r = startRow; r < startRow + 2; r++) {
+                for (int c = startCol; c < startCol + 2; c++) {
+                    sumHeat += heatmap[r][c];
+                }
+            }
+
+            if (sumHeat > maxHeat) {
+                maxHeat = sumHeat;
+                bestDirection = directions[K];
+            }
+        }
+    }
+    return bestDirection;
+}
+
+// Updated choosenGrid function
+void choosenGrid(char direction, int col, int row, int** heatmap, char** opponentGrid, char** DisplayedBotGrid, int* ship) {
+    int startRow = row, startCol = col;
+    int i, j;
+
+    switch (direction) {
+        case 'A':
+            startRow = row - 2; 
+            break;
+        case 'B': 
+            startRow = row + 2; 
+            break;
+        case 'L':
+            startCol = col - 2; 
+            break;
+        case 'R': 
+            startCol = col + 2; 
+            break;
+        default:
+            break;
+    }
+
+   
+    for (i = startRow; i < startRow + 2; i++) {
+        for (j = startCol; j < startCol + 2; j++) {
+           
+            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+                // Perform your actions on the heatmap, opponentGrid, and DisplayedBotGrid
+                char result = updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, i, j, ship, heatmap);
+                updateHeatMap(i, j, result, "fire", heatmap);
+            }
+        }
+    }
+}
+
+// Corrected ArtilleryBot function with proper memory handling
+void ArtilleryBot(int** heatmap, int* ship, char **DisplayedBotGrid, int **RadarGrid, char **opponentGrid) {
+    if (RadarGrid != NULL) {
+        // RadarGrid logic
+    } else {
+        bool **isShip = sunkships(ship, opponentGrid, DisplayedBotGrid);
+        int col = -1, row = -1;
+        for (int i = 0; i < GridSize; i++) {
+            for (int j = 0; j < GridSize; j++) {
+                if (DisplayedBotGrid[i][j] == '*' && !isShip[i][j]) {
+                    row = i;
+                    col = j;
+                    break;
+                }
+            }
+        }
+
+        if (col != -1 && row != -1) {
+            char direction = GetGreatestArea(heatmap, row, col);
+            choosenGrid(direction, col, row, heatmap, opponentGrid, DisplayedBotGrid, ship);
+        } else {
+int **Grid = malloc(4 * sizeof(int *));
+for (int i = 0; i < 4; i++) {
+    Grid[i] = malloc(2 * sizeof(int));
+    for (int j = 0; j < 2; j++) {
+        Grid[i][j] = 0; // Initialize each element to 0
+    }
+}
+              findHighest2x2Grid(heatmap, Grid); // Assuming this handles memory allocation
+            int j = 0;
+            for (int i = 0; i < 4; i++) {
+                  printf("Updating Grid[%d][%d]: (%d, %d)\n", i, j, Grid[i][j], Grid[i][j + 1]);
+                char result = updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, Grid[i][j], Grid[i][j + 1], ship, heatmap);
+                updateHeatMap(Grid[i][j], Grid[i][j + 1], result, "fire", heatmap);
+                j++;
+            }
+            for (int i = 0; i < 4; i++) {
+                free(Grid[i]);
+            }
+            free(Grid);
+        
+
+        // Free `isShip` array
+        for (int i = 0; i < GridSize; i++) {
+            free(isShip[i]);
+        }
+        free(isShip);
+    
+        }
+    }
+}
+
