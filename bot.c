@@ -317,18 +317,69 @@ int BoundedByMisses(char **DisplayedGridBot,int col,int row){
     
 }
 
-int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **DisplayedGridBot, int *ship){
+int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int radarSweepsBot, char **DisplayedGridBot, int *ship) {
+    int flagShipSunkInCurrentTurn = 1; // Simulate unlocked condition
+    if (flagShipSunkInCurrentTurn == 1) {
+        char coordinate[3];
 
-    int smokeGrid[GridSize][GridSize] = {0};
+        
+        int bestRow = -1, bestCol = -1;
+        int maxHeat = -1;
 
-    if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
-    {printf("check check !!");
-        torpedo(oponentGrid, DisplayedGridBot, ship,heatmap);
+        
+        if (heatmap != NULL) {
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (heatmap[i][j] > maxHeat && DisplayedGridBot[i][j] == '-') {
+                        maxHeat = heatmap[i][j];
+                        bestRow = i;
+                        bestCol = j;
+                    }
+                }
+            }
+        }
+
+       
+        if (bestRow == -1 || bestCol == -1) {
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (DisplayedGridBot[i][j] == 'H') { // Target areas around hits
+                        if (i > 0 && DisplayedGridBot[i - 1][j] == '-') { bestRow = i - 1; bestCol = j; }
+                        else if (i < 9 && DisplayedGridBot[i + 1][j] == '-') { bestRow = i + 1; bestCol = j; }
+                        else if (j > 0 && DisplayedGridBot[i][j - 1] == '-') { bestRow = i; bestCol = j - 1; }
+                        else if (j < 9 && DisplayedGridBot[i][j + 1] == '-') { bestRow = i; bestCol = j + 1; }
+                    }
+                }
+            }
+        }
+
+       
+        if (bestRow == -1 || bestCol == -1) {
+            bestRow = rand() % 9;
+            bestCol = rand() % 9;
+        }
+
+        
+        coordinate[0] = 'A' + bestRow;
+        sprintf(coordinate + 1, "%d", bestCol + 1);
+
+        printf("Bot uses Artillery at %s\n", coordinate);
+
+        
+        int result = Artillery(oponentGrid, DisplayedGridBot, coordinate, "easy", 1, ship);
+
+        if (result)
+            printf("Artillery was a HIT!\n");
+        else
+            printf("Artillery MISSED!\n");
+
+        return result;
     }
-    if (flagShipSunkInCurrentTurn == 1)
-    {
-        // Artillery()
-    }
+
+    
+    printf("Bot makes a regular move.\n");
+    return 0;
+}
      if (targetCount > 0) {
         // Prioritize firing at the first target in the list
         int targetRow = targetList[0].row;
