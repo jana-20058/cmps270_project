@@ -181,6 +181,34 @@ void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
         }
     }
 }
+void Artillery(char **opponentGrid, char **displayedGrid, int row, int col) {
+    int rowOffset[] = {-1, 0, 1, 0}; 
+    int colOffset[] = {0, 1, 0, -1};
+
+   
+    if (isalpha(opponentGrid[row][col])) {
+        displayedGrid[row][col] = '*'; // Hit
+        printf("Artillery hit at (%d, %d)\n", row, col);
+    } else {
+        displayedGrid[row][col] = 'o'; // Miss
+        printf("Artillery missed at (%d, %d)\n", row, col);
+    }
+
+    
+    for (int i = 0; i < 4; i++) {
+        int adjRow = row + rowOffset[i];
+        int adjCol = col + colOffset[i];
+        if (checkIndex(adjRow, adjCol)) { 
+            if (isalpha(opponentGrid[adjRow][adjCol])) {
+                displayedGrid[adjRow][adjCol] = '*'; 
+                printf("Artillery hit at (%d, %d)\n", adjRow, adjCol);
+            } else if (displayedGrid[adjRow][adjCol] == '~') {
+                displayedGrid[adjRow][adjCol] = 'o'; 
+                printf("Artillery missed at (%d, %d)\n", adjRow, adjCol);
+            }
+        }
+    }
+}
 
 // Generate a heatmap based on ship sizes and placements
 void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
@@ -320,7 +348,17 @@ int botmove(char **oponentGrid, int **heatmap, int smokeScreensUsedBot, int rada
     }
     if (flagShipSunkInCurrentTurn == 1)
     {
-        // Artillery()
+        int targetRow = rand() % GridSize;  
+    int targetCol = rand() % GridSize;  
+
+    
+    while (displayedGridBot[targetRow][targetCol] != '~') {
+        targetRow = rand() % GridSize;
+        targetCol = rand() % GridSize;
+    }
+
+   
+    Artillery(opponentGrid, displayedGridBot, targetRow, targetCol);
     }
     if (radarSweepsBot > 3)
     {
