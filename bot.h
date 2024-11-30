@@ -12,7 +12,7 @@ int flagShipSunkInCurrentTurn = 0;
 int smokeScreensUsedBot=0;
 int radarSweepsUsedBot=0;
 coordinate targetList[MAX_TARGETS];
-
+bool** sunkships(int** ship,int**opponentGrid,int** DisplayedBotGrid);
 char matchingCharacters(int index);
 void ShipPlacment(char **grid);
 void initializeHeatGrid(int** heatGrid);
