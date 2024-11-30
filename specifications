@@ -82,8 +82,65 @@
 
 //int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid)
 //Requires:Nothing
-//Effects:If the move is availble for use(number of times used<=3) and coordinates at the 2x2 area are valid,checks the area at the given coordinate, informs the user if opponents ship is found or not without revealing the location, and return 1.Otherwise,informs the user of the invalid input and returns 0.
+//Effects: - it will perform only if the radarSweepUSedBot <3 otherwise it will print a message
+//         - slest a 2x2 area based on:
+//            1. cells  not adjacent to a sunk ship and not swept yet ("~") 
+//            2. cells with the hghest value(heatmap) which will be sorted in a descending order
+//         - shows the radar sweep result in the chosen area by updating 'displayedGrid':
+//           . marks hits ("*")if found
+//           . marks misses("O") if not found
+//         - updates the heatmap based on revealed results
+//         - it will tack the progress of the bot in sinking ships by decrementing the respective ship's health in"ship"
+//         - it will return 1 if teh radar is performed , and 0 otherwise
 
 //int SmokeScreen(int **smokeGrid, char *coordinate, int shipsSunk, int smokeScreensUsed)
 //Requires:Nothing
-// Effects: If the move is available for use (number of times the smoke screen has been used <= number of sunk ships) and the coordinates within the 2x2 area are valid, it obscures the area at the specified coordinate. This ensures that if a radar sweep is deployed by the opponent, no ships will be detected in this area. Clears the console and returns 1. Otherwise, informs the user of the invalid input and returns 0.
+// Effects: - checks if the bot is allowed to use the smoke screen action based on the condition that the bot can use it after a ship is sunk
+//          -if it is allowed to use it , the bot will begin selecting and moving 2x2 area to deploy the smoke screen:
+//              1. it will give the priority to the edges and corners of the grid
+//              2. if the previous condition was not satifyied so it will select an area near to a "*" cell
+//              3. if none of the conditions was satistiyed , the bot will choose randomly where to select
+//          - when a cell is selescted it will mark it visited and obscures teh corresponding cells in smokeGrid
+//          - makes sure  that the chosen area is within the bounds of the grid
+//          - it will clear the console and prints the choordinates where the smoke screen was deployed
+//          -  if the smoke screen is deployed successfully it will return 1 , if the bot is not allowed to deploy it so it will return 0.
+
+// bool isTargetPresent(int row, int col)
+//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//effects:- it will check if the coordinates(row,col) present any target in the targetList
+//        - it will pass over yhe targetList to find a match (for row anc col)
+//        - it will return true if he finds a matching pair , and false otherwise
+
+//void removeTarget(int index)
+//requires: index should be a non negative int
+//effects:-  if the index <0 or index >= targetCount , it will print an error message
+//        -  remove the target at a specifc index from the targetList by shifting the remaining elements by one position to the left
+//        -  decrements the targetCount by 1 to update the number of targets
+
+//bool addTarget(int row, int col)
+//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//effects: - it will check if the target(row, col) is already present in the targetList:
+//                 if it is there , does not add it and returns false
+//          - if the list is not full:
+//           . add a new target at the end of the targetList
+//           . increment targetCount by 1
+//           . return true to indicate that is worked
+//          - if the list is full:
+//           . print that the target is full and cannot add more
+//           . return false
+
+// bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship)
+//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//effects: - check the 8 cells adjacent to the pair(row,col) in a vertical , horizontal and diagonal way
+//         - if any of the adjacent cells conrain a part of a ship, and the corresponding ship in "ship" is sunk , return true
+//         - if no adjacent cells corrspond the criteria , return false
+
+
+// int compareCells(const void *a, const void *b, void *heatmap_void)
+//requires:
+//effects: - 
+//         - compare the heatmap values of the 2 cells:
+//           . return a positive value if the heatmap value of "b" >"a"
+//           . return a negative value if the heatmap value of "b"<"a"
+//           . return 0 if the heatmap values are equal
+ 
