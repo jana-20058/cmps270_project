@@ -560,7 +560,7 @@ void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship,int ** heat
     
     int maxHitsCol = 0, columnToApplyTorpedo = 0;
 int maxHitsRow = 0, rowToApplyTorpedo = 0;
-bool** isShip=sunkships;
+bool** isShip=sunkships(ship,opponentGrid,DisplayedBotGrid);
 for (int K = 0; K < GridSize; K++) {
     int hitsInCol = 0, hitsInRow = 0;
 
