@@ -5,7 +5,7 @@
 #include <string.h>
 #include "common_functions.h"
 #include "bot.h"
-#include <stdbool.h>
+
 
 #define GridSize 10
 #define ShipNumber 4
@@ -664,7 +664,7 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
             }
         }
 }
-bool sunkships(int** ship,int**opponentGrid,int** DisplayedBotGrid){
+bool** sunkships(int** ship,int**opponentGrid,int** DisplayedBotGrid){
     
     coordinate arr[12];
     for (int i = 0; i < 12; i++)
