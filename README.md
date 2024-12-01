@@ -40,3 +40,11 @@ The game continues until all the ships of one side ,either player or bot, are su
 3. Track Progress: After each turn, see your hits/misses on the grid. The enemy’s grid stays hidden.
 
 4. Make Moves: Guess a spot (e.g., move A1) to attack the enemy.
+
+## Strategy Used to Implement the Bot
+
+We used a **heat map strategy** with some optimizations to improve the bot's decision-making in the game.
+For a more detailed explanation, check out the following video that discusses  the idea of heat map.
+
+[Watch the YouTube Video](https://youtu.be/8FctDuTfcO8?si=MoJ-eemnZjGKpePl)
+
