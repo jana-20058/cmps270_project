@@ -30,3 +30,13 @@ Radar: Can be used 3 times to check if there is at least one hit in a specified 
 Smoke: Can be used as many times as the number of ships you’ve sunk. Covers a 2x2 grid to prevent the opponent's radar from detecting hits within that area.
 
 The game continues until all the ships of one side ,either player or bot, are sunk
+
+##How to play
+
+1. Start: You get an empty grid to place your ships.
+
+2. Place Ships: Pick a spot (e.g., A1) and a direction (vertical or horizontal), and enter it in the formate(A1,vertical)
+
+3. Track Progress: After each turn, see your hits/misses on the grid. The enemy’s grid stays hidden.
+
+4. Make Moves: Guess a spot (e.g., move A1) to attack the enemy.
