@@ -191,12 +191,16 @@
 //Effects: places the ship on the grid in the specified location
 
 //int Col(char *coordinate)
-//requires:nothing
+//requires:coordinate must be made up of an Alphabit in UpperCase followed by a digit!=0 or 10
 //Effects: Extracts and converts the row number  from a coordinate string to its corresponding integer index. If the column is out of bounds, returns -1
 
 //int Row(char *coordinate)
-//requires:Nothing
+//requires:coordinate must be made up of an Alphabit in UpperCase followed by a digit!=0 or 10
 //effects: Converts the colu letter from a coordinate string to its corresponding integer index. If the row is out of bounds, returns -1
+
+//int RowForTorpedo(char *coordinate);
+//requires:coordinate must be a digit!=0 or 10
+//effects:converts the coordinate into its corresponding row in the Grid following zero base indexing
 
 //void clearConsole()
 //Requires: nothing
@@ -230,4 +234,10 @@
 //Requires: coordinte of length<=2
 // Effects: If the move is unlocked (flag == 1 and number of ships sunk > 3) and the coordinate is valid,calls`TorRow` or `TorCol` at the specified coordinate, and returns 1. Otherwise, informs the user of the invalid input and returns 0.
 
+//int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid)
+//Requires:Nothing
+//Effects:If the move is availble for use(number of times used<=3) and coordinates at the 2x2 area are valid,checks the area at the given coordinate, informs the user if opponents ship is found or not without revealing the location, and return 1.Otherwise,informs the user of the invalid input and returns 0.
 
+//int SmokeScreen(int **smokeGrid, char *coordinate, int shipsSunk, int smokeScreensUsed)
+//Requires:Nothing
+// Effects: If the move is available for use (number of times the smoke screen has been used <= number of sunk ships) and the coordinates within the 2x2 area are valid, it obscures the area at the specified coordinate. This ensures that if a radar sweep is deployed by the opponent, no ships will be detected in this area. Clears the console and returns 1. Otherwise, informs the user of the invalid input and returns 0.
