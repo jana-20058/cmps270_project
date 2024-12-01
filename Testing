@@ -1,3 +1,49 @@
+*heatmapValue
+Test Cases:
+1.the heat map has one max value
+this test case ensures that the function chooses tha max slot (row,col) 
+Expected output: returns a pointer to the max slot
+2.the heat map has more that one max
+this test case ensures that the function can handle multiple maxs
+Expected output: randomly chooses one of the max slots
+3.the heat map is generated to zero
+this test case ensures that the function handles when the max is zero
+Expected output: randomly chooses on the slots (any slot within the Grid)
+
+choosenGrid Function
+1.the slot passed is an edge or corner solt and direction is passed correctly(no out of bounds)
+This test case ensures that the function update the heat map accordingly even within along the edges
+Expected output:each slot within the 2x2 area(adjacent to the chosen slot) is fired at and marke by 'o' if it is a miss ,or by '*' if it is a hit,the heat maoe gets upadated accordingly
+2.the slot passed is any arbitrary slot and direction is passed correctly(no out of bounds)
+This test case ensures that the function update the heat map accordingly 
+Expected output:each slot within the 2x2 area(adjacent to the chosen slot) is fired at and marked with 'o' if it is a miss ,or by '*' if it is a hit,the heat map gets upadated accordingly
+3.the 2x2 area covered contains a previous hit or miss or both
+this test case ensures that the function handles 2x2 grids that have already been fired apon in some slots(doesn't interven with pervious hits/misses)
+Expected output:each slot within the 2x2 area(adjacent to the chosen slot) is fired at if it is '~' and marked  with 'o' if it is a miss ,or by '*' if it is a hit,the heat map gets upadated accordingly
+
+findHighest2x2Grid Function
+Test Cases:
+1.the heatmap is initialized with 0
+this test case ensures that the function handles cases when the highest sum between all 2x2 areas is 0
+Expected output:fills a  2x2 Grid  with all the coordinates of the first 2x2 grid whoes sum=0;
+2.there are more than one  max 2x2 areas 
+this test case ensures that the function handles multiple max's
+Expected output: fills a 2x2 grid with the coordinates of the first max(sum=max)
+3.the heat map has arbitrary values
+this test case ensures that the functions handles regular input correctly
+Expected output: fills the 2x2 grid witht he coordinate of the max 2x2 grid(sum=max)
+
+matchingIndecies Function
+Test case:
+1.element passed is an alphabit that doesn'y correspond to a ship
+this test case ensures that the function differentiates between those alphabits that correspond to a ship and those that don't
+Expected output:return -1
+2.element passed is an alphabit that has  a differnet case than that corresponding to a ship
+this test case ensures that the function is case sensitive
+Expected output: retrun -1
+3.element passed is a character that corresponds to a ship
+this test case ensures that the function correctly handles valid input
+Expected output: returns the index corresponding to the ship
 matchingCharacters Function
 Test Cases:
 
