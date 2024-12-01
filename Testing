@@ -267,3 +267,219 @@ Expected Output: Returns -1, indicating that the ship cannot be placed at this c
 This case ensures that the function correctly handles overlapping coordinates.
 Expected Output: Returns -1, indicating that the ship cannot be placed at this cell.
 
+isTargetPresent Function
+Case 1:
+input:
+  list=[{r=1,col=2},{r=3,col=2}]
+  row=1,col=2
+  TargetCount=2
+expected output:
+  True  
+
+Case2:
+input:
+  list=[{r=1,col=2},{r=3,col=2}]
+  row=1,col=1
+  TargetCOunt=2
+expected output:
+  False
+
+Case3:
+input:
+  list=[]
+  row=1,col=1
+  targetCount=0
+expected output:
+  False
+
+
+
+removeTarget Function:
+Case 1:Remove any valid target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(2)
+Expected output:
+   updatedList={1,7,8,11}
+   TargetCount=4
+      
+Case 2:Remove the first target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(1)
+Expected output:
+   updatedList={5,7,8,11}
+   TargetCount=4
+
+Case 3:Remove the last target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(4)
+Expected output:
+   updatedList={1,5,7,8}
+   TargetCount=4 
+
+Case 4:Remove invalid target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(-1)
+Expected output:
+   Invalid target index: -1   
+(same for removeTarget(5))
+
+
+
+addTarget Function:
+Case 1:add a new target to an empty list
+input:
+  targetList={}
+  targetCount=0
+  addTarget(1,2)
+expected output:
+   (updated targetList={(1,2)}  
+   targetCOunt=1)
+   result=true
+   
+Case 2:add a new target 
+input: add a new target
+  targetList={(3,4)}
+  targetCount=1
+  addTarget(1,2)
+expected output:
+   (updated targetList={(3,4),(1,2)}  
+   targetCOunt=2)
+   result=true   
+
+
+ Case 3:add a repeated target 
+input:
+  targetList={(1,2)}
+  targetCount=1
+  addTarget(1,2)
+expected output:
+   (updated targetList={(1,2)}  
+   targetCOunt=1)
+   result=false
+
+Case 4:add a new target to a full list
+input:
+  targetList={(1,2),(3,4)} lets say it the max number of elements
+  targetCount=2
+  addTarget(1,5)
+expected output:
+   Target list is full. Cannot add more targets
+   result=false 
+
+
+ isAdjacentToSunkShip Function:
+ Case 1:
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, -1}; ( Ship 'C' is active; Ship 'D' is sunk)
+       row = 0, col = 0;
+Expected output:true
+
+Case 2:
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, 0}; ( both are active)
+       row = 1, col = 1;
+Expected output:false
+
+Case 3:
+ input:
+   oppenentGrid={
+    {'D', '~', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, -1}; ( Ship 'C' is active; Ship 'D' is sunk)
+       row = 0, col = 1;
+Expected output:true
+
+Case 4:out of bounds
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, 0}; ( no sunk ships)
+       row = -1, col = 0;
+Expected output:false
+
+
+Case 5: all ships sunk
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {-1, -1}; ( both are sunk)
+       row = 1, col = 2;
+Expected output:true
+
+Case 6:
+ input:
+   oppenentGrid={
+    {'~', '~', '~'},
+    {'~', '~', '~'},
+    {'~', '~', '~'}
+          };
+       ship = {}; 
+       row = 1, col = 1;
+Expected output:false
+
+
+compareCells Function:
+Case 1:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {0, 1};  
+    int b[2] = {1, 1};  
+
+Expected output:13
+
+
+Case 2:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {1, 0};  
+    int b[2] = {2, 2};  
+
+Expected output:0
+
+
+Case 3:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {2, 1}; 
+    int b[2] = {2, 2};  
+
+Expected output:-7
+
