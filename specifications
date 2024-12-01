@@ -29,12 +29,34 @@
 //effects:returns the coordinate of cell that has one of highest heatmap values such that its not bounded by misses.
 
 //void torpedoCol(char** DisplayedBotGrid,int columnToApplyTorpedo,char** opponentGrid,int* ship)
-//requires:
-//effects:
+//requires:Nothing
+//effects:fires the entire column passed as argument and updetes both displyed bot grid and heatmap.
+
+//void choosenGrid(char direction, int col, int row, int** heatmap, char** opponentGrid, char** DisplayedBotGrid, int* ship)
+//requires:Nothing
+//effects: Fires at the 2x2 grid adjacent to the specified cell with coordinates (row, col) in the given direction (above, below, left, or right). Updates the heatmap and the bot's displayed grid accordingly.
+
+//char matching(int index)
+//requires: nothing
+//Effects: Matches the given index, representing the position of a ship in the array of ships, to the corresponding letter that identifies the ship.
+
+//int ShipsSunkByBot(int *ship)
+//requires:Nothing
+//effects:Effects: Detects if a ship is sunk. If a ship is sunk, sets its size to -1, marks a flag as 1, and returns the flag.
+
+//void ArtilleryBot(int**heatmap,int *ship, char**DisplayedBotGrid, char **opponentGrid)
+//requires:Nothing
+//effectsEffects: Fires at cells from the radar-generated list if available. Otherwise, targets the 2x2 grid adjacent to a hit on a non-sunk ship with the highest sum of heatmap values. If no hits  exists, fires at the 2x2 grid with the highest overall heatmap value.
+
+
+//void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
+//requires:Nothing
+//effects: Generates the heatmap based on the placement of ships, increases the values at the edges by 3 and at the corners by 5.
 
 //void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGrid,int* ship);
-//requires:
-//effects:
+//requires:Nothing
+//effects:fires the entire row passed as argument and updetes both displyed bot grid and heatmap.
+
 // void initializeHeatGrid(int **heatGrid)
 // Requires: Nothing
 // Effects: Initializes the given heatmap to zero.
@@ -63,58 +85,9 @@
 //bool** sunkships(int* ship,char**opponentGrid,char** DisplayedBotGrid)
 //requires:Nothing
 //effects:returns a 10x10 boolean grid,where each cell is set to true if the corresponding position represent a sunkship.
-// Common Functions
 
-// int matchingIndices(char element)
-// Requires: Nothing
-// Effects: Returns the size of the ship that starts with the letter represented by `element`.
-//int  ShipsSunkByBot(int *ship)
 
-// void printGrid(char **grid)
-// Requires: Nothing
-// Effects: Prints the grid passed as a parameter.
 
-// Player Functions
-
-//void to_lowercase(char *str)
-//Requires:a string of alphabetical characters
-//Effects:changes all the charcters to lower case 
-
-//void fillGrid(char **grid, char name[])
-//Requires: Nothing
-//Effects: prompts the player to input the position of each ship.If the position is valid ,it places the ship using the locateShip function.Otherwise it informs the user of the issue and prompts for a new input
-
-//void locateship(int size, char letter, int col, int row, char **grid, char direction[])
-//Requires:direction passed should either be "horizontal" or "vertical" where case isn't important
-//Effects: places the ship on the grid in the specified location
-
-//void clearConsole()
-//Requires: nothing
-//Effects: clears the console
-
-// int canPlaceShip(char **grid, char direction, int row, int col, int size)
-// Requires: Nothing
-// Effects: Returns 0 if a ship cannot be placed at the given coordinate (row, col) with the specified size and direction; otherwise, returns 1.
-
-//int TorCol(char * coordinate,char** opponentGrid, char** DisplayedGrid,char *mode,int *ship)
-//Requires:coordinte passed should be a letter
-//Effects: fires at the whole correspondig column,updates the Displayed  grid according to the mode chosen(easy/hard), prints HIT or MISS,and decrements the size of the corresponding ship in the `ship` array if the result is a hit.Always returns 1
-
-//int TorRow(char * coordinate,char** opponentGrid, char** DisplayedGrid,char *mode,int *ship)
-//Requires:coordinate passed should be a digit or 10
-//Effects:fires at the whole corresponding row( digit/10 - 1),updates the Displayed grid according to the mode chosen(easy/hard),prints HIT or MISS, and decrements the size of the corresponding ship in the `ship` array if the result is a hit.Always returns 1
-
-//int Fire(char **opponenetGrid, char **DisplayedGrid, char *coordinates, char *mode, int *ship)
-//Requires: Nothing
-//Effects:returns 0 if the input coordinate is invalid,and informs the user of the issue.Otherwise fires at the provided coordinate,updates the Displayed grid according to the mode chosen(easy/hard),prints HIT or MISS,decrements the size of the corresponding ship in the `ship` array if the result is a hit.
-
-// int artillery(char **opponentGrid, char **displayedGrid, char *coordinate, char *mode, int flag, int *ship)
-// Requires: Nothing
-// Effects: If the move is unlocked (flag == 1), fires a 2x2 grid at the given coordinates, updates the displayed grid of the current player based on the mode (easy/hard), returns HIT or MISS,decrements the size of the corresponding ship in the `ship` array if the result is a hit. If still locked, prints a statement to inform the player.
-
-//int Torpedo(char **opponentGrid, char **DisplayedGrid, char *coordinates, char *mode, int *ship, int flag, int counter)
-//Requires: coordinte of length<=2
-// Effects: If the move is unlocked (flag == 1 and number of ships sunk > 3) and the coordinate is valid,calls`TorRow` or `TorCol` at the specified coordinate, and returns 1. Otherwise, informs the user of the invalid input and returns 0.
 
 
 //int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid)
@@ -180,4 +153,64 @@
 //           . return a positive value if the heatmap value of "b" >"a"
 //           . return a negative value if the heatmap value of "b"<"a"
 //           . return 0 if the heatmap values are equal
+
+
+
+
+
+
+
+// Common Functions
+
+// int matchingIndices(char element)
+// Requires: Nothing
+// Effects: Returns the size of the ship that starts with the letter represented by `element`.
+//int  ShipsSunkByBot(int *ship)
+
+// void printGrid(char **grid)
+// Requires: Nothing
+// Effects: Prints the grid passed as a parameter.
+
+// Player Functions
+
+//void to_lowercase(char *str)
+//Requires:a string of alphabetical characters
+//Effects:changes all the charcters to lower case 
+
+//void fillGrid(char **grid, char name[])
+//Requires: Nothing
+//Effects: prompts the player to input the position of each ship.If the position is valid ,it places the ship using the locateShip function.Otherwise it informs the user of the issue and prompts for a new input
+
+//void locateship(int size, char letter, int col, int row, char **grid, char direction[])
+//Requires:direction passed should either be "horizontal" or "vertical" where case isn't important
+//Effects: places the ship on the grid in the specified location
+
+//void clearConsole()
+//Requires: nothing
+//Effects: clears the console
+
+// int canPlaceShip(char **grid, char direction, int row, int col, int size)
+// Requires: Nothing
+// Effects: Returns 0 if a ship cannot be placed at the given coordinate (row, col) with the specified size and direction; otherwise, returns 1.
+
+//int TorCol(char * coordinate,char** opponentGrid, char** DisplayedGrid,char *mode,int *ship)
+//Requires:coordinte passed should be a letter
+//Effects: fires at the whole correspondig column,updates the Displayed  grid according to the mode chosen(easy/hard), prints HIT or MISS,and decrements the size of the corresponding ship in the `ship` array if the result is a hit.Always returns 1
+
+//int TorRow(char * coordinate,char** opponentGrid, char** DisplayedGrid,char *mode,int *ship)
+//Requires:coordinate passed should be a digit or 10
+//Effects:fires at the whole corresponding row( digit/10 - 1),updates the Displayed grid according to the mode chosen(easy/hard),prints HIT or MISS, and decrements the size of the corresponding ship in the `ship` array if the result is a hit.Always returns 1
+
+//int Fire(char **opponenetGrid, char **DisplayedGrid, char *coordinates, char *mode, int *ship)
+//Requires: Nothing
+//Effects:returns 0 if the input coordinate is invalid,and informs the user of the issue.Otherwise fires at the provided coordinate,updates the Displayed grid according to the mode chosen(easy/hard),prints HIT or MISS,decrements the size of the corresponding ship in the `ship` array if the result is a hit.
+
+// int artillery(char **opponentGrid, char **displayedGrid, char *coordinate, char *mode, int flag, int *ship)
+// Requires: Nothing
+// Effects: If the move is unlocked (flag == 1), fires a 2x2 grid at the given coordinates, updates the displayed grid of the current player based on the mode (easy/hard), returns HIT or MISS,decrements the size of the corresponding ship in the `ship` array if the result is a hit. If still locked, prints a statement to inform the player.
+
+//int Torpedo(char **opponentGrid, char **DisplayedGrid, char *coordinates, char *mode, int *ship, int flag, int counter)
+//Requires: coordinte of length<=2
+// Effects: If the move is unlocked (flag == 1 and number of ships sunk > 3) and the coordinate is valid,calls`TorRow` or `TorCol` at the specified coordinate, and returns 1. Otherwise, informs the user of the invalid input and returns 0.
+
 
