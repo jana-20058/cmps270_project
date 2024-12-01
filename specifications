@@ -16,6 +16,25 @@
 // Requires: Nothing
 // Effects: Returns -1 if all adjacent cells to the one with coordinates (row, col) are misses; otherwise, returns 1.
 
+//void ShipPlacment(char **grid)
+//requires:Nothing
+//effects:places the ships randomly on the 10x10Grid
+
+//void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship,int ** heatmap)
+//reqires:Nothing
+//effects:Fires on an entire column or row, prioritizing the one with the highest number of hits on non-sunk ships; otherwise, if no hits are present, it targets the column or row with the highest heatmap value sum.
+
+//int *heatmapvalue(int **heatmap, char **DisplayGridBot,char**opponentGrid)
+//requires:Nothing
+//effects:returns the coordinate of cell that has one of highest heatmap values such that its not bounded by misses.
+
+//void torpedoCol(char** DisplayedBotGrid,int columnToApplyTorpedo,char** opponentGrid,int* ship)
+//requires:
+//effects:
+
+//void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGrid,int* ship);
+//requires:
+//effects:
 // void initializeHeatGrid(int **heatGrid)
 // Requires: Nothing
 // Effects: Initializes the given heatmap to zero.
@@ -28,11 +47,28 @@
 // Requires: Nothing
 // Effects: Updates the bot's displayed grid after firing at cell (nexti, nextj), returns the result (HIT/MISS), updates the heatmap, and decrements the size of the corresponding ship in the `ship` array if the result is a hit.
 
+// void findHighest2x2Grid(int** heatmap, int**Grid)
+//requires:nothing
+//Effects:Finds a 2x2 grid within the heatmap that has the highest sum of heatmap values and stores it in the provided grid
+
+//char  GetGreatestArea(int** heatmap,int row,int col)
+//requires:Nothing
+//effects:finds the 2x2 Grid with highest sum of heatmap values  that it is either(above/below/left/right)the specified cell(row,col)  . //should i add checking for bounds??
+
+//int *checkedge(char **DisplayedGridBot)
+//requires:Nothing
+//Effects: Returns the coordinates of a randomly chosen cell on the edges of the grid, ensuring the cell is not bounded by misses.
+
+
+//bool** sunkships(int* ship,char**opponentGrid,char** DisplayedBotGrid)
+//requires:Nothing
+//effects:returns a 10x10 boolean grid,where each cell is set to true if the corresponding position represent a sunkship.
 // Common Functions
 
 // int matchingIndices(char element)
 // Requires: Nothing
 // Effects: Returns the size of the ship that starts with the letter represented by `element`.
+//int  ShipsSunkByBot(int *ship)
 
 // void printGrid(char **grid)
 // Requires: Nothing
@@ -79,6 +115,7 @@
 //int Torpedo(char **opponentGrid, char **DisplayedGrid, char *coordinates, char *mode, int *ship, int flag, int counter)
 //Requires: coordinte of length<=2
 // Effects: If the move is unlocked (flag == 1 and number of ships sunk > 3) and the coordinate is valid,calls`TorRow` or `TorCol` at the specified coordinate, and returns 1. Otherwise, informs the user of the invalid input and returns 0.
+
 
 //int RadarSweep(char **grid, char **displayedGrid, char *coordinate, int radarSweepsUsed, int **smokeGrid)
 //Requires:Nothing
@@ -143,4 +180,4 @@
 //           . return a positive value if the heatmap value of "b" >"a"
 //           . return a negative value if the heatmap value of "b"<"a"
 //           . return 0 if the heatmap values are equal
- 
+
