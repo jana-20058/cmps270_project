@@ -85,7 +85,7 @@ Expected Output: Returns -1, indicating that the cell is bounded by misses.
 This case ensures that the function correctly handles cells not bounded by misses.
 Expected Output: Returns 1, indicating that the cell is not bounded by misses.
 
-//will be adjusted later on when other functions are implmented
+
 updateHeatMap Function
 Test Cases:
 
@@ -109,13 +109,25 @@ Expected Output :set this column to 0 in the heat map Grid
 botmove Function
 Test Cases:
 
-1.No ship has sunk in the previous turn (flagShipSunkInCurrentTurn == 1), and the number of ships sunk equals 3 (totalNumberOfShipsSunkByBot >= 3):
+1.A ship has sunk in the previous turn (flagShipSunkInCurrentTurn == 1), and the number of ships sunk equals 3 (totalNumberOfShipsSunkByBot >= 3):
 This case ensures the function correctly calls the torpedo move.
 Expected Output: Calls the torpedo function.
 
 2.The number of times the smoke screen is used equals the number of ships sunk (smokeScreensUsedBot = totalNumberOfShipsSunkByBot), radar sweep is unavailable (radarSweepsBot > 3), and no ship has sunk in the previous turn (flagShipSunkInCurrentTurn = 0):
 This case ensures the function correctly defaults to the 'fire' move.
-Expected Output: Calls the fire function.
+Expected Output: Calls the fire function
+
+3.A ship has sunk in the previous turn(flagShipSunk==1),and the number of ships sunk is less than 3
+This case ensures that the function correctly calls the Artillery move
+Expected Output:Calls the Artillery function
+
+4.The number of times raderSweep has been used is less than 4(radarSweepsUsedBot<=3),and the list that stores the coordinates from the previous ardar used if a ship is detected is empty (targetcount==0)
+This test Case ensures that the function correctly calls the radar move
+Expected output:Calls the Radar function
+
+5.The number of times the smoke screen is used by the bot is less than or equal to the number of ships it has sunk(
+This test case ensures that the function correctly calls the smokescreen function
+Expected output:calls the smokescreen function
 
 initializeHeatGrid Function
 Test Cases:
@@ -133,6 +145,56 @@ Expected Output: Returns *, updates the bot's displayed grid  at this cell to *.
 2.Pass as an argument coordinates (nexti and nextj) corresponding to a cell not occupied by a ship in the opponent's grid:
 This case ensures the bot’s displayed grid is correctly updated to o at this cell. 
 Expected Output: Returns o, updates the bot's displayed grid to o at this cell.
+
+Test Cases for sunkShips Function:
+1.The opponent grid has 0 hits
+This test case ensures that the function correctly handles grids with no hits yet
+Expected Output: Returns a 2D boolean grid filled with the value false
+2.The opponent grid has hits corresponding to only already sunk ships
+This test case ensures that the function correctly handles hits corresponding to sunk ships
+Expected Output: Returns a 2D boolean grid with a mix of true and false values, such that the true values correspond to the coordinates of the sunk ships
+3.The opponent grid has a mix of hits, some corresponding to already sunk ships and others that do not
+This test case ensures that the function correctly differentiates between slots related to sunk ships and those that do not
+Expected Output: A 2D boolean grid of false and true values, such that the coordinates of the sunk ships are the only ones corresponding to true
+4.The opponent grid has no previously sunk ships and only an arbitrary number of hits
+This test case ensures that the function handles a grid full of hits that do not correspond to any previously sunk ships
+Expected Output: Returns a 2D boolean grid filled entirely with false values
+
+ShipPlacemnt Function:
+Test Cases:
+1.grid passed is an empty Grid(filled with '~')
+this test case ensure that the function  randomly places ships when available 
+Expected output: the initial grid is updated to contain letters corresponding to ships after placement 
+2.grid passed isn't empty (Grid passed isn't just '~')
+this test case ensures that the function correctly handles overlap,meaning it doesn't place ships at the already filled slots
+Expected output: the initial grid is updated to contain letters corresponding to ships after placement without overlaping with the original content
+3.grid passed is full(Grid passed has no '~`)
+this test case ensures that the function correctly handles cases when no slot is avialble to place a ship 
+Expected output: the initial grid isn't changed 
+
+GetGreatestArea Function
+Test Cases:
+1.coordinate(row,col) passed is at the corner or along the edge
+this test case ensures that the function can handle boundaries correctly without going out of bounds
+Expected output:return the diretion of the max 2x2 grid value that remains withing bound
+2.the heatmap passed is initialized to 0
+this test case ensures that the function correctly handles when the mas 2x2 areas are all 0
+Expected output: the defult direction 'N'
+3.more than one 2x2 grid have the smae max value
+thsi ensures that the function can handle cases when more than one output is logically correct
+Expected output:return the direction of the first 2x2 max area found
+
+GenerateHeatmap Function:
+1.the displayedBot Grid Has No Hits or Misses (Grid is Filled with ~)
+ This test case ensures that the heatmap is properly generated by considering all slots as available for ship placement
+Expected Output: A 2D integer grid where each slot is incremented once for every ship that is checked and confirmed to fit in that position
+2.the displayedBot Grid has both hits or misses
+This test case ensures that the heatmap is correctly generated by only considering the slots where ships can still be placed, excluding areas marked as hits or misses
+Expected Output: A 2D integer grid where each slot is incremented once for every  ship that is checked and confirmed to fit within the available slots
+3.the displayedBot Grid is full(no '~' available)
+This test case ensures that the heatmap won;t be genrated as there are no possible slots are avialable to place any of the ships 
+Expected output:a 2D integer Grid initialized to 0
+
 
 isTargetPresent Function
 Case 1:
