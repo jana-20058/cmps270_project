@@ -933,6 +933,7 @@ list[index].col=j;
 
 }
 
+
 char * GetGreatestArea(int** heatmap,int row,int col){
 int RowCoordinate[] = {-2, 2, 0, 0}; 
 int ColumnCoordinate[] = {0, 0, -2, 2}; 
@@ -968,65 +969,107 @@ for (int i = 0; i < GridSize; i++) {
 
 
 
-int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
+// int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
+//     if (smokeScreensUsedBot >= shipsSunk) {
+//         printf("The bot cannot use any more smoke screens\n");
+//         return 0;
+//     }
+
+//     int row = -1, col = -1;
+//     bool foundNewArea = false;
+
+//     // Implementing Edge and Corner Bias for Smoke Screen
+//     for (int i = 0; i < GridSize && !foundNewArea; i++) {
+//         for (int j = 0; j < GridSize && !foundNewArea; j++) {
+//             if ((i == 0 || i == GridSize - 1 || j == 0 || j == GridSize - 1) && !visited[i][j]) {
+//                 row = i;
+//                 col = j;
+//                 foundNewArea = true;
+//             }
+//         }
+//     }
+
+//     // If no edges or corners are found, choose an area near bot's ships (Proximity to Player's Ship Locations)
+//     if (!foundNewArea) {
+//         for (int i = 0; i < GridSize && !foundNewArea; i++) {
+//             for (int j = 0; j < GridSize && !foundNewArea; j++) {
+//                 if (displayedGrid[i][j] == '*' && !visited[i][j]) {
+//                     row = i;
+//                     col = j;
+//                     foundNewArea = true;
+//                 }
+//             }
+//         }
+//     }
+
+//     // If no new area is found (e.g., all edges and ship areas are covered), use a random area
+//     if (!foundNewArea) {
+//         srand(time(NULL));
+//         do {
+//             row = rand() % GridSize;
+//             col = rand() % GridSize;
+//         } while (visited[row][col]);
+//     }
+
+//     visited[row][col] = true;
+
+//     printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
+
+//     // Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
+//     for (int i = row; i < row + 2; i++) {
+//         for (int j = col; j < col + 2; j++) {
+//             if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
+//                 smokeGrid[i][j] = 1;
+//             }
+//         }
+//     }
+
+//     printf("Bot deployed smoke screen successfully\n");
+//    return 1;
+// }
+int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
     if (smokeScreensUsedBot >= shipsSunk) {
         printf("The bot cannot use any more smoke screens\n");
         return 0;
     }
 
     int row = -1, col = -1;
-    bool foundNewArea = false;
+    bool foundUnhitShip = false;
 
-    // Implementing Edge and Corner Bias for Smoke Screen
-    for (int i = 0; i < GridSize && !foundNewArea; i++) {
-        for (int j = 0; j < GridSize && !foundNewArea; j++) {
-            if ((i == 0 || i == GridSize - 1 || j == 0 || j == GridSize - 1) && !visited[i][j]) {
+    // Step 1: Look for unhit ship parts ('*') to deploy the smoke screen
+    for (int i = 0; i < GridSize && !foundUnhitShip; i++) {
+        for (int j = 0; j < GridSize && !foundUnhitShip; j++) {
+            if (displayedGrid[i][j] == '*' && !visited[i][j]) {
                 row = i;
                 col = j;
-                foundNewArea = true;
+                foundUnhitShip = true;
             }
         }
     }
 
-    // If no edges or corners are found, choose an area near bot's ships (Proximity to Player's Ship Locations)
-    if (!foundNewArea) {
-        for (int i = 0; i < GridSize && !foundNewArea; i++) {
-            for (int j = 0; j < GridSize && !foundNewArea; j++) {
-                if (displayedGrid[i][j] == '*' && !visited[i][j]) {
-                    row = i;
-                    col = j;
-                    foundNewArea = true;
-                }
-            }
-        }
-    }
+    // Step 2: If no unhit ship parts found (e.g., all ships hit), return an error
+    if (!foundUnhitShip) {
+        printf("No unhit ships found to deploy a smoke screen.\n");
+        return 0;
+    }// ghayre kermel ma yaamela
 
-    // If no new area is found (e.g., all edges and ship areas are covered), use a random area
-    if (!foundNewArea) {
-        srand(time(NULL));
-        do {
-            row = rand() % GridSize;
-            col = rand() % GridSize;
-        } while (visited[row][col]);
-    }
-
+    // Mark this cell as visited
     visited[row][col] = true;
 
-    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);
+    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);// ma lezem tbayyen
 
-    // Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
+    // Step 3: Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
     for (int i = row; i < row + 2; i++) {
         for (int j = col; j < col + 2; j++) {
             if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
-                smokeGrid[i][j] = 1;
+                smokeGrid[i][j] = 1;  // Mark the area as a smoke screen
             }
         }
     }
 
     printf("Bot deployed smoke screen successfully\n");
-   return 1;
+    return 1;  // Indicating the smoke screen was deployed
 }
-
 
 // Helper functions
 bool addTarget(int row, int col) {
