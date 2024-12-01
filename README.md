@@ -31,7 +31,7 @@ Smoke: Can be used as many times as the number of ships you’ve sunk. Covers a 
 
 The game continues until all the ships of one side ,either player or bot, are sunk
 
-##How to play
+## How to play
 
 1. Start: You get an empty grid to place your ships.
 
