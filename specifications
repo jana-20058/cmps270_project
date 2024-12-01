@@ -42,7 +42,7 @@
 
 //int ShipsSunkByBot(int *ship)
 //requires:Nothing
-//effects:Effects: Detects if a ship is sunk. If a ship is sunk, sets its size to -1, marks a flag as 1, and returns the flag.
+//effects: Detects if a ship is sunk. If a ship is sunk, sets its size to -1 and increments the counter of sunkships, marks a flag as 1, and returns the flag.
 
 //void ArtilleryBot(int**heatmap,int *ship, char**DisplayedBotGrid, char **opponentGrid)
 //requires:Nothing
@@ -171,6 +171,11 @@
 // Requires: Nothing
 // Effects: Prints the grid passed as a parameter.
 
+//int checkIndex(int row, int col)
+//requires:Nothing
+//Effects: check if coordintes passed are valid 
+
+
 // Player Functions
 
 //void to_lowercase(char *str)
@@ -185,9 +190,21 @@
 //Requires:direction passed should either be "horizontal" or "vertical" where case isn't important
 //Effects: places the ship on the grid in the specified location
 
+//int Col(char *coordinate)
+//requires:nothing
+//Effects: Extracts and converts the row number  from a coordinate string to its corresponding integer index. If the column is out of bounds, returns -1
+
+//int Row(char *coordinate)
+//requires:Nothing
+//effects: Converts the colu letter from a coordinate string to its corresponding integer index. If the row is out of bounds, returns -1
+
 //void clearConsole()
 //Requires: nothing
 //Effects: clears the console
+
+//int ShipsSunk(int *ship)
+//requires:Nothing
+//Effects: Detects if a ship is sunk. If a ship is sunk, sets its size to -1 and increments the counter of sunkships.
 
 // int canPlaceShip(char **grid, char direction, int row, int col, int size)
 // Requires: Nothing
