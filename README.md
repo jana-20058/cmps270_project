@@ -1,50 +1,48 @@
-# Battle Ship Game Bot Against A player
-## Discription
-The Battleship Game Bot is a strategic game where a bot plays against a human player. The players place his ships (Destroyer, Carrier, Submarine, Battleship) on a 10x10 grid. The goal is to sink all of the bot’s ships before it sinks yours. It is a turn-based game. In this repository we recreate a terminal version of this game.
-## Game features:
+# Battleship Game Bot Against a Player
 
-This game deviates from the traditional approach as it uses 4 ships rather than these ships are
+## Description
 
-Ship Types:
+The Battleship Game Bot is a strategic game where a bot plays against a human player. The players place their ships (Destroyer, Carrier, Submarine, Battleship) on a 10x10 grid. The goal is to sink all of the bot’s ships before it sinks yours. It is a turn-based game. This repository recreates a terminal version of this game.
 
-Destroyer
+### Game Features:
+- **4 Ship Types**:
+  - **Destroyer**
+  - **Carrier**
+  - **Submarine**
+  - **Battleship**
 
-Carrier
+- **Special Moves**:
+  - **Fire**: Fires at a specified coordinate on the opponent's grid.
+  - **Torpedo**: Unlocked after sinking 3 of the opponent's ships. Fires across a whole row or column.
+  - **Artillery**: Unlocked after sinking an opponent's ship. Fires a 2x2 grid.
+  - **Radar**: Can be used 3 times to check if there is at least one hit in a specified 2x2 grid.
+  - **Smoke**: Can be used as many times as the number of ships you’ve sunk. Covers a 2x2 grid to prevent the opponent's radar from detecting hits within that area.
 
-Submarine
+The game continues until all ships of one side (either player or bot) are sunk.
 
-Battleship
+## How to Play
 
-It is also considered a more advanced version with a wider variety of moves which are:
-
-Special Moves:
-
-Fire: Fires at a specified coordinate on the opponent's grid.
-
-Torpedo: Unlocked after sinking 3 of the opponent's ships. Fires across a whole row or column.
-
-Artillery: Unlocked after sinking an opponent's ship. Fires a 2x2 grid.
-
-Radar: Can be used 3 times to check if there is at least one hit in a specified 2x2 grid.
-
-Smoke: Can be used as many times as the number of ships you’ve sunk. Covers a 2x2 grid to prevent the opponent's radar from detecting hits within that area.
-
-The game continues until all the ships of one side ,either player or bot, are sunk
-
-## How to play
-
-1. Start: You get an empty grid to place your ships.
-
-2. Place Ships: Pick a spot (e.g., A1) and a direction (vertical or horizontal), and enter it in the formate(A1,vertical)
-
-3. Track Progress: After each turn, see your hits/misses on the grid. The enemy’s grid stays hidden.
-
-4. Make Moves: Guess a spot (e.g., move A1) to attack the enemy.
+1. **Start**: You get an empty grid to place your ships.
+2. **Place Ships**: Pick a spot (e.g., A1) and a direction (vertical or horizontal), and enter it in the format (A1, vertical).
+3. **Track Progress**: After each turn, see your hits/misses on the grid. The enemy’s grid stays hidden.
+4. **Make Moves**: Guess a spot (e.g., A1) to attack the enemy.
 
 ## Strategy Used to Implement the Bot
 
-We used a **heat map strategy** with some optimizations to improve the bot's decision-making in the game.
-For a more detailed explanation, check out the following video that discusses  the idea of heat map.
+We used a **heat map strategy** with some optimizations to improve the bot's decision-making in the game. The bot keeps track of possible hits by marking locations on the board with a heat map. This allows it to prioritize its guesses based on where it has previously hit or missed.
 
-[Watch the YouTube Video](https://youtu.be/8FctDuTfcO8?si=MoJ-eemnZjGKpePl)
 
+For a more detailed explanation, check out the following video that discusses the idea of heat maps:
+
+[Watch the YouTube Video](https://www.youtube.com/watch?v=yourvideoID)
+
+## How to Use
+
+### Prerequisites
+Before playing, make sure you have the following installed:
+- **C Compiler**: (e.g., GCC or Clang)
+
+### Running the Game
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/battleship-game.git
