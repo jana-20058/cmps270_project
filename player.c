@@ -31,6 +31,72 @@ else if(strcmp(mode, "easy") == 0){
     return 1;
 }
 
+int Row(char *coordinate)
+{
+    int row = atoi(&coordinate[1]);
+    if (row < 1 || row > GridSize)
+    {
+        return -1; //  out of bounds
+    }
+    row = row - 1;
+    return row;
+}
+int Col(char *coordinate)
+{
+    int col = coordinate[0] - 'A';
+    if (col < 0 || col >= GridSize)
+    {
+        return -1;
+    }
+    return col;
+}
+
+int ShipsSunk(int *ship)
+{
+    int counter = 0;
+    for (int i = 0; i < ShipNumber; i++)
+    {
+        if (ship[i] == 0)
+        {
+            ship[i] = -1;
+
+            char *str;
+            switch (i)
+            {
+            case 0:
+                str = "Carrier";
+                break;
+            case 1:
+                str = "destroyer";
+                break;
+            case 2:
+                str = "BattleShip";
+                break;
+            case 3:
+                str = "Submarine";
+                break;
+
+            default:
+                printf("\n");
+                break;
+            }
+            printf("\n%s ship has Sunk!\n", str);
+            counter++;
+        }
+    }
+    return counter;
+}
+int RowForTorpedo(char *coordinate)
+{
+    int row = atoi(coordinate);
+    if (row < 1 || row > GridSize)
+    {
+        return -1; //  out of bounds
+    }
+    row = row - 1;
+    return row;
+}
+
 int TorRow(char * coordinate,char** opponentGrid, char** DisplayedGrid,char *mode,int *ship){
     int hits=0;
     int num=RowForTorpedo(coordinate);
