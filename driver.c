@@ -19,7 +19,7 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
 
     printgrid(Player);
     char mode[10];
-    printf("What difficulty level do you want to play(easy,hard)? ");
+    printf("Whaat difficulty level do you want to play(easy,hard)? ");
     scanf("%9s", mode);
     to_lowercase(mode);
     while (strcmp(mode, "easy") != 0 && strcmp(mode, "hard") != 0)
@@ -75,9 +75,11 @@ int radarSweepsBot = 0;
     //2d array to keep tarck of smoked coordinates
 int **playerSmoke = (int **)malloc(GridSize * sizeof(int *));
 int **BotSmoke = (int **)malloc(GridSize * sizeof(int *));
+int ** RadarGrid=(int **)malloc(GridSize * sizeof(int *));
 for (int i = 0; i < GridSize; i++) {
     playerSmoke[i] = (int *)calloc(GridSize, sizeof(int));
     BotSmoke[i] = (int *)calloc(GridSize, sizeof(int));
+    RadarGrid[i]=(int *)calloc(GridSize, sizeof(int));
 }
 
 
@@ -93,7 +95,7 @@ int smokeScreensUsedBot = 0;
 
     if(randplayer==1){
         //will be changed shortly after
-       botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
+       botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke,RadarGrid);
     }
    
     while (counterSunkByBot<4 && counterSunkByPlayer<4)
@@ -168,7 +170,7 @@ int smokeScreensUsedBot = 0;
         clearConsole();*/
 
 //call the bot function note will be chnaged shortly
-counterSunkByBot=botmove(Player,heatmap,0,0,BotDisplayedGrid,Curr);
+counterSunkByBot=botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke,RadarGrid);
   //for checking
   for(int i=0;i<10;i++){
     for(int j=0;j<10;j++){
@@ -204,7 +206,9 @@ printf("You LOST!");
     for (int i = 0; i < GridSize; i++) {
     free(playerSmoke[i]);
     free(BotSmoke[i]);
+    free(RadarGrid[i]);
 }
+free(RadarGrid);
 free(playerSmoke);
 free(BotSmoke);
 
