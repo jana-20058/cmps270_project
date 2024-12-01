@@ -1,0 +1,485 @@
+matchingCharacters Function
+Test Cases:
+
+1.pass as an argument any size of the ships (Battleship, Carrier, Submarine, Destroyer):
+This case ensures that the function correctly handles the situation when the size matches one of the ship sizes represented by the letters(d,B,).
+Expected Output: The  letter that represent the ship who's size matches the passed size.
+
+2.pass as an argument  any arbitrary Size that doesn’t match the size of any ship (not 5, 4, 3, or 2)
+This case ensures that the function correctly handles the situation when the size doesn’t match any of the ship sizes.
+Expected Output: Return -1.
+
+matchingIndices Function
+Test Cases:
+
+1.Pass as an argument any of the letters representing the ships (C, d, B, s):
+This case ensures that the function correctly handles and matches the letter passed with size of ship it represent.
+Expected Output:size of ship that is represented by the letter passed
+
+2.Passas an argument  any letter other than (C, d, B, s):
+This case ensures that the function correctly handles the situation when the letter doesn’t represent any ship.
+Expected Output: Return -1.
+
+printgrid Function
+Test Cases:
+
+1.Pass as an argument a grid initialized with ~:
+This case ensures that the grid is printed correctly, with rows numbered from 1 to 10 and columns labeled with letters from A to J.
+Expected Output: A copy of the grid is printed.
+
+boundedByMisses Function
+Test Cases:
+
+1.Pass  as an argument the coordinate of a cell(row,col) bounded by misses and not on the edges (row=9, col=9, col=0, row=0)or corners
+This case ensures that the function correctly handles cells bounded by misses in the middle of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+2.Pass  as an argument  a coordinate of a cell(row,col) bounded by misses and located in a corner ((0,0), (0,9), (9,0), (9,9)):
+This case ensures that the  function correctly handles cells bounded by misses in at the edges of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+3.Pass a coordinate of a cell bounded by misses and located on the edges but not in a corner (row=9, col=9, col=0, row=0):
+This case ensures that the  function correctly handles cells bounded by misses  at the corner of the grid.
+Expected Output: Returns -1, indicating that the cell is bounded by misses.
+
+4.Pass a coordinate of a cell that is not bounded by misses (either in the middle, on the edge, or in a corner):
+This case ensures that the function correctly handles cells not bounded by misses.
+Expected Output: Returns 1, indicating that the cell is not bounded by misses.
+
+//will be adjusted later on when other functions are implmented
+updateHeatMap Function
+Test Cases:
+
+1.Pass as an argument the result as a hit (*) and the move as 'fire':
+This case ensures that the heatmap grid is correctly updated when the result is a hit and move is fire .
+Expected Output: Prioritize adjacent cells by adding 5 to their value and cells adjacent to those by adding 2.
+
+2.Pass as an argument the result as a miss (o) and the move as 'fire':
+This case ensures that the heatmap grid is correctly updated when the result is a miss and move is fire.
+Expected Output: Decrement adjacent cells by subtracting 1 from their value and cells adjacent to those by subtracting 1
+//will be adjusted later on when other functions are implmented
+botmove Function
+Test Cases:
+
+1.No ship has sunk in the previous turn (flagShipSunkInCurrentTurn == 1), and the number of ships sunk equals 3 (totalNumberOfShipsSunkByBot >= 3):
+This case ensures the function correctly calls the torpedo move.
+Expected Output: Calls the torpedo function.
+
+2.The number of times the smoke screen is used equals the number of ships sunk (smokeScreensUsedBot = totalNumberOfShipsSunkByBot), radar sweep is unavailable (radarSweepsBot > 3), and no ship has sunk in the previous turn (flagShipSunkInCurrentTurn = 0):
+This case ensures the function correctly defaults to the 'fire' move.
+Expected Output: Calls the fire function.
+
+initializeHeatGrid Function
+Test Cases:
+
+1.Passas an argument a dynamically allocated 2D array on the heap:
+Expected Output: Dynamically allocate 10 arrays for the 2D array and initialize every cell to 0.
+
+updateDisplayedGridBot Function
+Test Cases:
+
+1.Pass an argument  coordinates (nexti and nextj) corresponding to a cell occupied by a ship in the opponent's grid:
+This case ensures the bot’s displayed grid is correctly updated to * at this cell, and the size of the corresponding ship is decremented.
+Expected Output: Returns *, updates the bot's displayed grid  at this cell to *.
+
+2.Pass as an argument coordinates (nexti and nextj) corresponding to a cell not occupied by a ship in the opponent's grid:
+This case ensures the bot’s displayed grid is correctly updated to o at this cell. 
+Expected Output: Returns o, updates the bot's displayed grid to o at this cell.
+
+Testing the player's functions:
+
+to_lowerCase function
+Test Cases:
+1.pass as an argumnt a string of alphabetical letters of lenght >=1
+This test case ensures the function can convert any alphabetical string into lower case
+Expected Output:changes each charcater in the string to lower case
+2.pass an empty string
+This test case ensures that the function can handle empty strings
+Expected Output:No changes will be observed
+
+fillGrid function:
+Test Cases:
+1.the user enters valid coordinates for placing a ship (e.g A1,horizontal)
+This test case ensures that the function can handle valid input and call loacteship Function to proceed with the ship's placements
+Expected output:placement of the ship is done according to the locate ship function
+This tets case ensures that the function can handle out of bounds inputs 
+2.the user enters out of bounds coordinates (e.g A11,horizontal)
+Expected output: a message indicating the coordinates are out of bound
+3.the user enters already used or overlapping coordinates
+This test case ensures that the function can handle duplicate inputs or overlapping coordinates
+Expected output: a message indicating that there is an overlap with the ships
+4.the user enters coordinates in an invalid formate (e.g horizontal A1)
+This test case ensures that the function can deal with differnt input format
+Expected output: a message indicating the input is invalid
+5.the user enters invalid directions (e.g A1,diagonal)
+this tetst case ensures that the function handles only 2 directions(horizontal and vertical)
+Expected output: a message indicating invalid direction 
+6.the user enters invalid row or column coordinate (e.g A,horizontal)
+this test cases ensures the function handles undefined rows or columns 
+Expecte output: a message indicating invalid input
+7.the user enters the direction in mixed case(e.g A1,VerTICal)
+this test case ensures the function can deal with any case direction and call loacteship Function to proceed with the ship's placements
+Expected output :placement of the ship is done according to the locate ship function
+
+
+locateship function
+Test Cases:
+1.Horizontal placement of the ship
+this test case ensures the fucntion can handle basic horizontal placmnet of ships (e.g B3,horizontal)
+Expected output:the ship is located at the coordinates B3,C3...according to the ship's size
+2.Vertical placement of the ship 
+this test case ensures the fucntion can handle basic vertical placmnet of ships (e.g B3,vertical)
+Expected output:the ship is located at the coordinates B3,B4...according to the ship's size
+3.Horizontal or vertical placment of the ship along the edges
+this test case ensures that the function can place the ships along the edges of the grid if within bounds
+Expected output:the ship is located at the passed coordinate along the edge
+
+TorCol Function
+Test Cases:
+1.coordinate corresponds to a column already containing marked hits and misses in easy mode
+this test case ensures the function correctly fires at the column without changing already marked hits and misses.It marks the unmarked hits with '*' and unmarked misses with 'o'.
+Expected Output: if at least one new hit is found prints "HIT!" else print "MISS!" 
+2.coordinate corresponds to a column already containing marked hits and misses in hard mode
+this test case ensures the function  correctly fires at the column without changing already marked hits. It marks the unmarked hits with '*'(misses aren't marked)
+Expected Output: if at least one new hit is found prints "HIT!" else print "MISS!" 
+3.coordinate corresponds to an unmarked column in easy mode
+this test case ensures the function  correctly fires at an umarked column.It marks the hits with '*' and misses with 'o'.
+Expected Output: if at least one hit is found prints "HIT!" else print "MISS!"
+4.coordinate corresponds to an unmarked column in hard mode
+this test case ensures the function  correctly fires at an umarked column.It marks the hits with '*' (misses aren't marked)
+Expected Output: if at least one hit is found prints "HIT!" else print "MISS!"
+
+TorRow Function
+1.coordinate corresponds to a row already containing marked hits and misses in easy mode
+this test case ensures the function correctly fires at the row without changing already marked hits and misses.It marks the unmarked hits with '*' and unmarked misses with 'o'.
+Expected Output: if at least one new hit is found prints "HIT!" else print "MISS!" 
+2.coordinate corresponds to a row already containing  marked hits and misses in hard mode
+this test case ensures the function  correctly fires at the row without changing already marked hits. It marks the unmarked hits with '*'(misses aren't marked)
+Expected Output: if at least one new hit is found prints "HIT!" else print "MISS!" 
+3.coordinate corresponds to an unmarked row in easy mode
+this test case ensures the function  correctly fires at an umarked row.It marks the hits with '*' and misses with 'o'.
+Expected Output: if at least one hit is found prints "HIT!" else print "MISS!"
+4.coordinate corresponds to an unmarked row in hard mode
+this test case ensures the function  correctly fires at an umarked row.It marks the hits with '*' (misses aren't marked)
+Expected Output: if at least one hit is found prints "HIT!" else prints "MISS!"
+
+Fire Function
+Test Cases:
+1.A valid coordinte is passed in easy mode (e.g fire A1)
+this ensures the the function correctly fires a the specified slot(A1).The slot is marked with '*' if it contained a part of the opponents ship (hit),otherwise it marks it as a miss'o'
+Expected output:prints "HIT!" if the slot contained a ship ,else prints "MISS!",returns 1
+2.A valid coordinte is passed in hard mode (e.g fire A1)
+this ensures the the function correctly fires a the specified slot(A1).The slot is marked with '*' if it contained a part of the opponents ship (hit).(misses aren't marked)
+Expected output:prints "HIT!" if the slot contained a ship ,else prints "MISS!",returns 1
+3.An out of bound coordinate is passed in either hard or easy mode e.g(fire L3)
+this ensures that the function correctly handle invalid input
+Expected ourput :prints "Invalid input!",returns 0,
+4.A coordinate perviously marked(fired at using any function)
+this ensures that the function handles duplicated input 
+Expected output:prints:"You have already fired at this coordinate",returns 0
+5.the coordinte passed is an edge coordinate whether in easy or hard mood (e.g fire J10 )
+this ensures that the function can handle edge coordinates by marking a hit with '*' and a miss with 'o'(the miss is marked only in easy mode)
+Expecte output:prints "HIT!" if the slot contained a ship ,else prints "MISS!",returns 1
+
+Torpedo Function
+Test Cases:
+1.the flag passed isn't 1(flag==0)
+this tast case ensures that the function doesn't use an unlocked move
+Expected Output: prints :"Invalid input/You can't use this move yet,make sure you have sunk 3 ships such that the last one sunk within the current turn to use the move on the next turn", and returns 0
+2.the counter(number of ships sunk) <3
+this tast case ensures that the function doesn't use a locked move
+Expected Output: prints :"Invalid input/You can't use this move yet,make sure you have sunk 3 ships such that the last one sunk within the current turn to use the move on the next turn",and returns 0
+3.the coordinate passed is invalid(out of bounds)(e,g torpedo X ot torpedo  20)
+this test case ensures that the function handles out of bounds input
+Expected output:returns 0
+4.the coordinate passed is an alphabit(corresponds to a column)
+this ensures that the function correctly handles column coordinates .Calls the TorCol function to fire at the given column
+Expected output:firing at the corresponding column according to the TorCol Function.Returns 1
+5.the coordinate passed is an a digit(corresponds to a row)
+this ensures that the function correctly handles row coordinates .Calls the TorRow function to fire at the given row
+Expected output:firing at the corresponding row according to the TorCol Function.Returns 1
+6.the coordinate passed is an edge coordinate (e.g torpedo 10)
+this ensures that the function can handle boundary input
+Expected output :fireing at the corresponding row(if digit) or column(if alphabit) according to the TorRow or TorCol functions respectively.Returns 1
+
+RadarSweep function
+Test Cases:
+1.radarSweepsused>3 (number of times rader sweep was used is more than 3)
+This test case ensures that the function doesn't use a locked move
+Expected output:prints :"You have used all your radar sweeps",and returns 0
+2.the coordinate passed is out of bounds (e.g Radar X1)
+This test case ensures that the function out of bounds coordinates
+Expected Output :prints "Invalid coordinate" ,and returns 0
+3.an arbitrary coordinate is passed (e.g radar A3)
+this test case ensures that the function correctly handles valid input within a 2x2 area (A3,A4,B3,B4)
+Expected output:if at least one of the slots contains part of a ship prints:"Enemy ships found", else prints :"No enemy ships found", and returns 1
+4.The smokeGrid provided contains ones at the exact coordinates passed to the function
+this ensures that the function doesn't report any ships found within the 2x2 area were smokescreen was deployed by the opponent 
+Expected output:prints "No enemy ships found", and returns 1
+5.The smokeGrid provided contains ones at coordinates other than the ones passed 
+This ensures that the function correctly reports any ships found, even if the smoke screen has been used by the opponent, as long as they are not located at the coordinates passed
+Expected Output: if at least one of the slots contains part of a ship prints:"Enemy ships found", else prints :"No enemy ships found", and returns 1
+6.The SmokeGrid passed conatins ones along some of the coordinates passed 
+this ensures that the function correctly reports ship found within the 2x2 area of the coordinates that aren't  covered by the smoke screen 
+Expected output :if at least one of the uncovered slots  contains part of a ship prints:"Enemy ships found", else prints :"No enemy ships found", and returns 1
+// idk if i shoud mention edge coordinate since if we put A1 it works but J1 it shouldn't perform however in out code we dont handle the case
+
+SmokeScreen function
+Test Cases:
+1.SmokeScreenUsed>shipsSunk(number of time the smoke screen is used is greater than the number of ships sunk by the current player)
+This ensures that the function doesn't deploy smoke screen when it is still locked 
+Expected output:prints "You can't use smoke screen",and returns 0
+2.the coordinate passed is out of bounds
+this esures that the function handles out fo bound coordinates
+Expected output:"Invalid coordinates",and returns 0
+3.arbitary coordinates are passed 
+this ensures that the function correctly deployes smoke screen along the 2x2 area at the specified coordinate
+Expected output:fills the smokeGrid with 1's at the specified 2x2 area ,prints :"Smoke screen deployed succssfully","Press Enter to continue", clears console ,and return 1
+// idk if i shoud mention edge coordinate since if we put A1 it works but J1 it shouldn't perform however in out code we dont handle the case
+
+artillery Function
+Test Cases:
+1.pass as an argument flag = 0
+This case ensures that function correctly handle the case when move is locked.
+Expected Output: Prints: "You cannot use this move yet. Sink one ship of your opponent in the current turn to unlock it for the next turn."
+2.Pass as an argument coordinate of cell(row,col) that is out of bounds (either row or column, or both):
+This case ensures that the function correctly handles out-of-bounds coordinates.
+Expected Output: Prints: "Invalid input!"
+3.pass as an argument flag = 1, mode = 'easy,' and a valid  2x2 grid 
+This case ensures that function correctly fires at the 2x2 grid and represents hits with * and misses with o.
+Expected Output: If at least one cell in the grid is hit, prints: "HIT". Otherwise, prints: "MISS".
+3.pass as an argument flag = 1, mode = 'hard' and a valid  2x2 grid
+This case ensures that the function correctly fires at the 2x2 grid, representing only hits with * (misses are not represented ).
+Expected Output: If at least one cell in the grid is hit, prints: "HIT". Otherwise, prints: "MISS".
+4.pass as an argument  flag i= 1, any mode (easy or hard), and the 2x2 grid is invalid (one cell out of bounds):
+This case ensures that the function correctly handles invalid grids.
+Expected Output: Prints: "Invalid input/area is out of bounds."
+
+canPlaceShip Function
+Test Cases:
+1.Pass  as an argument  the player’s grid with a either  directions Horizontal(H) or Vertical(V) and legal coordinates (within bounds and without overlap):
+This test case ensures  that the function correctly handles coordinates that are neither out of bounds nor overlapping.
+Expected Output: Returns 1, indicating that the ship can be placed at this cell.
+2.Pass  as an argument the player’s grid with  either  directions Horizontal(H) or Vertical(V) and coordinates that violate boundary constraints (out of bounds):
+This case ensures that the function correctly handles coordinates that are out of bounds.
+Expected Output: Returns -1, indicating that the ship cannot be placed at this cell.
+3.Pass  as an argument the player’s grid with a direction (Horizontal or Vertical) and coordinates that overlap with other ships:
+This case ensures that the function correctly handles overlapping coordinates.
+Expected Output: Returns -1, indicating that the ship cannot be placed at this cell.
+
+isTargetPresent Function
+Case 1:
+input:
+  list=[{r=1,col=2},{r=3,col=2}]
+  row=1,col=2
+  TargetCount=2
+expected output:
+  True  
+
+Case2:
+input:
+  list=[{r=1,col=2},{r=3,col=2}]
+  row=1,col=1
+  TargetCOunt=2
+expected output:
+  False
+
+Case3:
+input:
+  list=[]
+  row=1,col=1
+  targetCount=0
+expected output:
+  False
+
+
+
+removeTarget Function:
+Case 1:Remove any valid target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(2)
+Expected output:
+   updatedList={1,7,8,11}
+   TargetCount=4
+      
+Case 2:Remove the first target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(1)
+Expected output:
+   updatedList={5,7,8,11}
+   TargetCount=4
+
+Case 3:Remove the last target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(4)
+Expected output:
+   updatedList={1,5,7,8}
+   TargetCount=4 
+
+Case 4:Remove invalid target
+input:
+   targetList={1,5,7,8,11}
+   targetCount=5
+   removeTargte(-1)
+Expected output:
+   Invalid target index: -1   
+(same for removeTarget(5))
+
+
+
+addTarget Function:
+Case 1:add a new target to an empty list
+input:
+  targetList={}
+  targetCount=0
+  addTarget(1,2)
+expected output:
+   (updated targetList={(1,2)}  
+   targetCOunt=1)
+   result=true
+   
+Case 2:add a new target 
+input: add a new target
+  targetList={(3,4)}
+  targetCount=1
+  addTarget(1,2)
+expected output:
+   (updated targetList={(3,4),(1,2)}  
+   targetCOunt=2)
+   result=true   
+
+
+ Case 3:add a repeated target 
+input:
+  targetList={(1,2)}
+  targetCount=1
+  addTarget(1,2)
+expected output:
+   (updated targetList={(1,2)}  
+   targetCOunt=1)
+   result=false
+
+Case 4:add a new target to a full list
+input:
+  targetList={(1,2),(3,4)} lets say it the max number of elements
+  targetCount=2
+  addTarget(1,5)
+expected output:
+   Target list is full. Cannot add more targets
+   result=false 
+
+
+ isAdjacentToSunkShip Function:
+ Case 1:
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, -1}; ( Ship 'C' is active; Ship 'D' is sunk)
+       row = 0, col = 0;
+Expected output:true
+
+Case 2:
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, 0}; ( both are active)
+       row = 1, col = 1;
+Expected output:false
+
+Case 3:
+ input:
+   oppenentGrid={
+    {'D', '~', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, -1}; ( Ship 'C' is active; Ship 'D' is sunk)
+       row = 0, col = 1;
+Expected output:true
+
+Case 4:out of bounds
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {1, 0}; ( no sunk ships)
+       row = -1, col = 0;
+Expected output:false
+
+
+Case 5: all ships sunk
+ input:
+   oppenentGrid={
+    {'~', 'D', '~'},
+    {'~', '~', '~'},
+    {'C', 'C', 'C'}
+          };
+       ship = {-1, -1}; ( both are sunk)
+       row = 1, col = 2;
+Expected output:true
+
+Case 6:
+ input:
+   oppenentGrid={
+    {'~', '~', '~'},
+    {'~', '~', '~'},
+    {'~', '~', '~'}
+          };
+       ship = {}; 
+       row = 1, col = 1;
+Expected output:false
+
+
+compareCells Function:
+Case 1:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {0, 1};  
+    int b[2] = {1, 1};  
+
+Expected output:13
+
+
+Case 2:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {1, 0};  
+    int b[2] = {2, 2};  
+
+Expected output:0
+
+
+Case 3:
+input:
+  heatmap = {
+    {12, 7, 15},
+    {9, 20, 5},
+    {3, 17, 10}
+};
+    int a[2] = {2, 1}; 
+    int b[2] = {2, 2};  
+
+Expected output:-7
+
