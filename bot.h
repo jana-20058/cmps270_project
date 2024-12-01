@@ -29,7 +29,7 @@ char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int next
 int  ShipsSunkByBot(int *ship);
 void torpedo(char **opponentGrid, char **DisplayedBotGrid, int *ship,int ** heatmap);
 char matching(int index);
-int SmokeScreenBot(int **smokeGrid, int shipsSunk, int smokeScreensUsedBot);
+int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot);
 void choosenGrid(char direction, int col, int row, int** heatmap, char** opponentGrid, char** DisplayedBotGrid, int* ship);
 void ArtilleryBot(int**heatmap,int *ship, char**DisplayedBotGrid, char **opponentGrid);
 void torpedoCol(char** DisplayedBotGrid,int columnToApplyTorpedo,char** opponentGrid,int* ship,int**heatmap);
