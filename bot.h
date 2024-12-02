@@ -11,7 +11,7 @@ int totalNumberOfShipsSunkByBot = 0;
 int flagShipSunkInCurrentTurn = 0;
 int smokeScreensUsedBot=0;
 int radarSweepsUsedBot=0;
-
+int   sumheatmap(int num,int type,int** heatmap);
 bool** sunkships(int* ship,char**opponentGrid,char** DisplayedBotGrid);
 char matchingCharacters(int index);
 void ShipPlacment(char **grid);
