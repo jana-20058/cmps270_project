@@ -16,6 +16,11 @@
 // Requires: Nothing
 // Effects: Returns -1 if all adjacent cells to the one with coordinates (row, col) are misses; otherwise, returns 1.
 
+
+// sumheatmap
+//requires:Nothing
+//Effects:Return sum of haetmap values at the column or row passed.
+
 //void ShipPlacment(char **grid)
 //requires:Nothing
 //effects:places the ships randomly on the 10x10Grid
