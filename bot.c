@@ -337,7 +337,7 @@ for(int i=0;i<ShipNumber;i++){
     {
         ArtilleryBot(heatmap, ship, DisplayedGridBot, oponentGrid);
     }
-    else if (radarSweepsUsedBot <= 3 && targetCount == 0 && flag==0)
+    else if (radarSweepsUsedBot < 3 && targetCount == 0 && flag==0)
     {
     
         RadarSweepBot(oponentGrid, DisplayedGridBot, radarSweepsUsedBot, heatmap, ship, SmokeGridOpp);
