@@ -121,19 +121,19 @@
 //          -  if the smoke screen is deployed successfully it will return 1 , if the bot is not allowed to deploy it so it will return 0.
 
 // bool isTargetPresent(int row, int col)
-//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//requires:nothing
 //effects:- it will check if the coordinates(row,col) present any target in the targetList
 //        - it will pass over yhe targetList to find a match (for row anc col)
 //        - it will return true if he finds a matching pair , and false otherwise
 
 //void removeTarget(int index)
-//requires: index should be a non negative int
+//requires:  nothing
 //effects:-  if the index <0 or index >= targetCount , it will print an error message
 //        -  remove the target at a specifc index from the targetList by shifting the remaining elements by one position to the left
 //        -  decrements the targetCount by 1 to update the number of targets
 
 //bool addTarget(int row, int col)
-//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//requires: nothing
 //effects: - it will check if the target(row, col) is already present in the targetList:
 //                 if it is there , does not add it and returns false
 //          - if the list is not full:
@@ -145,7 +145,7 @@
 //           . return false
 
 // bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship)
-//requires: the bounds of row and col should be between 0 and 9(not out of bounds)
+//requires: nothing
 //effects: - check the 8 cells adjacent to the pair(row,col) in a vertical , horizontal and diagonal way
 //         - if any of the adjacent cells conrain a part of a ship, and the corresponding ship in "ship" is sunk , return true
 //         - if no adjacent cells corrspond the criteria , return false
