@@ -22,7 +22,7 @@ void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot);
 void updateHeatMap(int col,int row,char result,char *move,int ** heatGrid);
 int *heatmapvalue(int **heatmap, char **DisplayGridBot,char**opponentGrid);
 void FireBot(char** opponentGrid, int** heatmap, char** DisplayGridBot,int* ship);
-int botmove(char **oponentGrid, int **heatmap,  char **DisplayedGridBot, int *ship,int** SmokeGridOpp,int** radarGrid);
+int botmove(char **oponentGrid, int **heatmap,  char **DisplayedGridBot, int *ship,int** SmokeGridOpp);
 int matchingIndecies(char cell);
 int *checkedge(char **DisplayedGridBot);
 char updateDisplayedGridBot(char **opponentGrid, char **DisplayGridBot, int nexti, int nextj, int *ship,int ** heatmap);
