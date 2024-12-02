@@ -56,7 +56,7 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
     getchar();
     clearConsole(); // or system("clear");
      ShipPlacment(Bot);
-     printgrid(Bot);
+
 
     // the players' ships
     int shipPlayer[ShipNumber] = {5, 3, 4, 2};
