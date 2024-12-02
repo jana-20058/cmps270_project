@@ -1210,15 +1210,17 @@ void choosenGrid(char direction, int col, int row, int **heatmap, char **opponen
 // Corrected ArtilleryBot function with proper memory handling
 void ArtilleryBot(int **heatmap, int *ship, char **DisplayedBotGrid, char**opponentGrid)
 {
-    if (list != NULL)
+   
+   /* if (targetCount>0)
     {
-        for(int i=0;i<4;i++){
- char result= updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, list[i].row, list[i].col, ship, heatmap);
-                updateHeatMap(list[i].row, list[i].col, result, "fire", heatmap);
+       for(int i=list[0].row;i<list[0].row+2;i++){
+        for(int j=list[0].col;j<list[0].col+2;j++){
+char result= updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, i,j, ship, heatmap);
+               updateHeatMap(i, j, result, "fire", heatmap);
         // RadarGrid logic
-    }}
-    else
-    {
+    }}}*/
+   else
+   {
         bool **isShip = sunkships(ship, opponentGrid, DisplayedBotGrid);
         int col = -1, row = -1;
         for (int i = 0; i < GridSize; i++)
