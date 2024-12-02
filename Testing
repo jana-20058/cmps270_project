@@ -10,13 +10,7 @@ Expected output: randomly chooses one of the max slots
 this test case ensures that the function handles when the max is zero
 Expected output: randomly chooses on the slots (any slot within the Grid)
 
-sumheatmap Function:
-1.pass the type as 0(which represents row) and any valid row index.
-This case ensure that this function correctly sum the heat map values of this row.
-Expected Output : the sum of heat map values at this row.
-2.pass the type as 1(which represents column) and any valid column index.
-This case ensure that this function correctly sum the heat map values of this column.
-Expected Output : the sum of heat map values at this column.
+
 
 choosenGrid Function
 1.the slot passed is an edge or corner solt and direction is passed correctly(no out of bounds)
@@ -41,17 +35,14 @@ Expected output: fills a 2x2 grid with the coordinates of the first max(sum=max)
 this test case ensures that the functions handles regular input correctly
 Expected output: fills the 2x2 grid witht he coordinate of the max 2x2 grid(sum=max)
 
-matchingIndecies Function
-Test case:
-1.element passed is an alphabit that doesn'y correspond to a ship
-this test case ensures that the function differentiates between those alphabits that correspond to a ship and those that don't
-Expected output:return -1
-2.element passed is an alphabit that has  a differnet case than that corresponding to a ship
-this test case ensures that the function is case sensitive
-Expected output: retrun -1
-3.element passed is a character that corresponds to a ship
-this test case ensures that the function correctly handles valid input
-Expected output: returns the index corresponding to the ship
+RowForTorpedo Function:
+1.pass row out of bounds
+this case ensure that this function correctly handles the case when row is out of bounds
+Expected Output: Return -1 
+2.pass row within bounds 
+this case ensure that this function correctly convert the row represented as a string to numerical value and computes the value to be used later on(row -1)
+Expected Output: Return the new value of row passed .
+
 matchingCharacters Function
 Test Cases:
 
