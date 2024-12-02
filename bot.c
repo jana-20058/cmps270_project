@@ -348,7 +348,12 @@ int BoundedByMisses(char **DisplayedGridBot, int col, int row)
 }
 
 int botmove(char **oponentGrid, int **heatmap, char **DisplayedGridBot, int *ship, int **SmokeGridOpp, int **radarGrid)
-{
+{    int flag=0;
+for(int i=0;i<ShipNumber;i++){
+    if(ship[i]==1){
+        flag=1;
+    }
+}
     if (flagShipSunkInCurrentTurn == 1 && totalNumberOfShipsSunkByBot >= 3)
     {
         printf("check check !!");
@@ -362,7 +367,7 @@ int botmove(char **oponentGrid, int **heatmap, char **DisplayedGridBot, int *shi
          printf("Before ArtilleryBot condition, flagShipSunkInCurrentTurn: %d\n", flagShipSunkInCurrentTurn);
         ArtilleryBot(heatmap, ship, DisplayedGridBot, oponentGrid);
     }
-    else if (radarSweepsUsedBot <= 3 && targetCount == 0)
+    else if (radarSweepsUsedBot <= 3 && targetCount == 0 && flag==0)
     {
         printf("We are in radar!!!!!!");
         RadarSweepBot(oponentGrid, DisplayedGridBot, radarSweepsUsedBot, heatmap, ship, SmokeGridOpp);
