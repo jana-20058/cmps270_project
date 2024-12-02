@@ -10,6 +10,14 @@ Expected output: randomly chooses one of the max slots
 this test case ensures that the function handles when the max is zero
 Expected output: randomly chooses on the slots (any slot within the Grid)
 
+sumheatmap Function:
+1.pass the type as 0(which represents row) and any valid row index.
+This case ensure that this function correctly sum the heat map values of this row.
+Expected Output : the sum of heat map values at this row.
+2.pass the type as 1(which represents column) and any valid column index.
+This case ensure that this function correctly sum the heat map values of this column.
+Expected Output : the sum of heat map values at this column.
+
 choosenGrid Function
 1.the slot passed is an edge or corner solt and direction is passed correctly(no out of bounds)
 This test case ensures that the function update the heat map accordingly even within along the edges
