@@ -65,13 +65,12 @@ char **Bot = (char **)malloc(sizeof(char *) * 10);
     int *Curr = shipBot;
 
     int counterSunkByPlayer = 0;
-    int counterSunkByBot = 0;
+
 
     int radarSweepsPlayer = 0;
-int radarSweepsBot = 0;
+
 
     int flagPlayer = 0;
-    int flagBot = 0;
     //2d array to keep tarck of smoked coordinates
 int **playerSmoke = (int **)malloc(GridSize * sizeof(int *));
 int **BotSmoke = (int **)malloc(GridSize * sizeof(int *));
@@ -83,7 +82,7 @@ for (int i = 0; i < GridSize; i++) {
 }
 
 
-
+int counterSunkByBot=0;
 
 int smokeScreensUsedPlayer = 0;
 int smokeScreensUsedBot = 0;
@@ -95,7 +94,7 @@ int smokeScreensUsedBot = 0;
 
     if(randplayer==1){
         //will be changed shortly after
-       botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke,RadarGrid);
+       botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke);
     }
    
     while (counterSunkByBot<4 && counterSunkByPlayer<4)
@@ -165,27 +164,13 @@ int smokeScreensUsedBot = 0;
         }
 
         printf("press enter to pass the turn ");
-       /*getchar();
+       getchar();
         getchar();
-        clearConsole();*/
+        clearConsole();
 
 //call the bot function note will be chnaged shortly
-counterSunkByBot=botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke,RadarGrid);
-  //for checking
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-        printf("%d   ",heatmap[i][j]);
-    }
-    printf("\n");
-  }
-
-    for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-        printf("%c   ",BotDisplayedGrid[i][j]);
-    }
-     printf("\n");
-
-    }}
+counterSunkByBot=botmove(Player,heatmap,BotDisplayedGrid,Curr,playerSmoke);
+ }
 printf("The Game has ended\n");
 if(counterSunkByPlayer>=4){
 printf("Congratulations %s ! You have WON!!",name1);}
@@ -206,9 +191,8 @@ printf("You LOST!");
     for (int i = 0; i < GridSize; i++) {
     free(playerSmoke[i]);
     free(BotSmoke[i]);
-    free(RadarGrid[i]);
 }
-free(RadarGrid);
+
 free(playerSmoke);
 free(BotSmoke);
 
