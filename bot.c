@@ -319,7 +319,7 @@ int BoundedByMisses(char **DisplayedGridBot, int col, int row)
     }
 }
 
-int botmove(char **oponentGrid, int **heatmap, char **DisplayedGridBot, int *ship, int **SmokeGridOpp, int **radarGrid)
+int botmove(char **oponentGrid, int **heatmap, char **DisplayedGridBot, int *ship, int **SmokeGridOpp)
 {    int flag=0;
 for(int i=0;i<ShipNumber;i++){
     if(ship[i]==1){
@@ -1206,7 +1206,7 @@ char result= updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, i,j, ship, h
 
             for (int i = 0; i < 4; i++)
             {
-                printf("Updating Grid[%d][%d]: (%d, %d)\n", i, 0, Grid[i][0], Grid[i][1]);
+    
                 char result = updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, Grid[i][0], Grid[i][1], ship, heatmap);
                 updateHeatMap(Grid[i][0], Grid[i][1], result, "fire", heatmap);
             }
@@ -1225,46 +1225,3 @@ char result= updateDisplayedGridBot(opponentGrid, DisplayedBotGrid, i,j, ship, h
         }
     }
 
-int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
-    if (smokeScreensUsedBot >= shipsSunk) {
-        printf("The bot cannot use any more smoke screens\n");
-        return 0;
-    }
-
-    int row = -1, col = -1;
-    bool foundUnhitShip = false;
-
-    // Step 1: Look for unhit ship parts ('*') to deploy the smoke screen
-    for (int i = 0; i < GridSize && !foundUnhitShip; i++) {
-        for (int j = 0; j < GridSize && !foundUnhitShip; j++) {
-            if (displayedGrid[i][j] == '*' && !visited[i][j]) {
-                row = i;
-                col = j;
-                foundUnhitShip = true;
-            }
-        }
-    }
-
-    // Step 2: If no unhit ship parts found (e.g., all ships hit), return an error
-    if (!foundUnhitShip) {
-        printf("No unhit ships found to deploy a smoke screen.\n");
-        return 0;
-    }// ghayre kermel ma yaamela
-
-    // Mark this cell as visited
-    visited[row][col] = true;
-
-    printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);// ma lezem tbayyen
-
-    // Step 3: Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
-            if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
-                smokeGrid[i][j] = 1;  // Mark the area as a smoke screen
-            }
-        }
-    }
-
-    printf("Bot deployed smoke screen successfully\n");
-    return 1;  // Indicating the smoke screen was deployed
-}
