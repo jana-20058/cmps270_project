@@ -11,6 +11,14 @@ this test case ensures that the function handles when the max is zero
 Expected output: randomly chooses on the slots (any slot within the Grid)
 
 
+RadarSweepBot Function:
+1.case when there is hits other then that corresponding to sunk ships
+this case ensure that this function will scan the 2x2 grid that is adjacent this cell (left,above,below,right)depending on which has highest sum of heat map values
+Expected Output: and when a ship is found all the coordinates are added to a list and the values in the slots are incremented ,otherwise the values in the slots are decremented
+2. case when there is no hits other than that corresponding to sunk ships
+this case ensure that function will correctly scan the 2x2 grid with highest sum of heat map values.
+Expected Output: and when a ship is found all the coordinates are added to a list and the values in the slots are incremented ,otherwise the values in the slots are decremented
+
 
 choosenGrid Function
 1.the slot passed is an edge or corner solt and direction is passed correctly(no out of bounds)
@@ -107,7 +115,7 @@ this case ensure that this function will fire the 2x2 grid that is adjcent this 
 Expected Output:update both Heat map and  Bot displayed Grid.
 
 3.case when there is no hits other than that corresponding to sunk ships
-this case ensure that function will correctly fire the 2x2 grid with highesr sum of heat map values.
+this case ensure that function will correctly fire the 2x2 grid with highest sum of heat map values.
 Expected Output:update both Heat map and  Bot displayed Grid.
 
 
