@@ -37,7 +37,7 @@ void torpedoRow(char** DisplayedBotGrid,int rowToApplyTorpedo,char** opponentGri
 bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship);
 int compareCells(const void *a, const void *b, void *heatmap_void);
 void findHighest2x2Grid(int** heatmap, int**Grid);
-void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUsedBot, int **heatmap, int *ship,int ** SomkeGridOpp,int ** radarGrid);
+void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUsedBot, int **heatmap, int *ship, int **SomkeGridOppd);
 bool isTargetPresent(int row, int col);
 void removeTarget(int index);
 #endif
