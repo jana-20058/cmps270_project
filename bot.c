@@ -190,34 +190,6 @@ void updateHeatMap(int row, int col, char result, char *move, int **heatGrid)
         }       
     }
 }
-/*void Artillery(char **opponentGrid, char **displayedGrid, int row, int col) {
-    int rowOffset[] = {-1, 0, 1, 0};
-    int colOffset[] = {0, 1, 0, -1};
-
-
-    if (isalpha(opponentGrid[row][col])) {
-        displayedGrid[row][col] = '*'; // Hit
-        printf("Artillery hit at (%d, %d)\n", row, col);
-    } else {
-        displayedGrid[row][col] = 'o'; // Miss
-        printf("Artillery missed at (%d, %d)\n", row, col);
-    }
-
-
-    for (int i = 0; i < 4; i++) {
-        int adjRow = row + rowOffset[i];
-        int adjCol = col + colOffset[i];
-        if (checkIndex(adjRow, adjCol)) {
-            if (isalpha(opponentGrid[adjRow][adjCol])) {
-                displayedGrid[adjRow][adjCol] = '*';
-                printf("Artillery hit at (%d, %d)\n", adjRow, adjCol);
-            } else if (displayedGrid[adjRow][adjCol] == '~') {
-                displayedGrid[adjRow][adjCol] = 'o';
-                printf("Artillery missed at (%d, %d)\n", adjRow, adjCol);
-            }
-        }
-    }
-}*/
 
 // Generate a heatmap based on ship sizes and placements
 void generateHeatmap(int *shipSizes, int **heatmap, char **DisplayedBot)
@@ -365,7 +337,7 @@ int botmove(char **oponentGrid, int **heatmap, char **DisplayedGridBot, int *shi
     else if (radarSweepsUsedBot <= 3 && targetCount == 0)
     {
         printf("We are in radar!!!!!!");
-        RadarSweepBot(oponentGrid, DisplayedGridBot, radarSweepsUsedBot, heatmap, ship, SmokeGridOpp, radarGrid);
+        RadarSweepBot(oponentGrid, DisplayedGridBot, radarSweepsUsedBot, heatmap, ship, SmokeGridOpp);
         radarSweepsUsedBot++;
     }
     else if (flagShipSunkInCurrentTurn > 0 && smokeScreensUsedBot < totalNumberOfShipsSunkByBot)
@@ -840,16 +812,8 @@ bool isAdjacentToSunkShip(int row, int col, char **opponentGrid, int *ship)
     return false;
 }
 
-// Merged RadarSweepBot function with embedded RadarSweep logic (2x2 sweep area)
-void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUsedBot, int **heatmap, int *ship, int **SomkeGridOpp, int **radarGrid)
-{
-    // Create a list of all potential cells
-    /*  int totalCells = GridSize * GridSize;
-      int (*cells)[2] = malloc(totalCells * sizeof(*cells));
-      if (cells == NULL) {
-          perror("Failed to allocate memory for cells");
-          exit(EXIT_FAILURE);
-      }*/
+void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUsedBot, int **heatmap, int *ship, int **SomkeGridOppd){
+ 
 
     bool **arr = sunkships(ship, opponentGrid, displayedGrid);
     int row = -1;
@@ -858,11 +822,11 @@ void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUse
     {
         for (int j = 0; j < GridSize; j++)
         {
-            if (!arr[i][j] && displayedGrid[i][j] == '*' && radarGrid[i][j] != 1)
+            if (!arr[i][j] && displayedGrid[i][j] == '*')
             {
                 row = i;
                 col = j;
-                radarGrid[i][j] = 1;
+               
             }
         }
     }
@@ -891,36 +855,7 @@ void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUse
     }
     else
     {
-        /* int count = 0;
-
-         for (int i = 0; i < GridSize; i++) {
-             for (int j = 0; j < GridSize; j++) {
-                 // Only consider cells that haven't been swept yet and are not adjacent to sunk ships
-                 if (displayedGrid[i][j] == '~' && !isAdjacentToSunkShip(i, j, opponentGrid, ship)) {
-                     cells[count][0] = i;
-                     cells[count][1] = j;
-                     count++;
-                 }
-             }
-         }
-
-         if (count == 0) {
-             printf("No valid cells available for radar sweep.\n");
-             free(cells);
-             return ;
-         }
-
-         // Sort the cells based on heatmap values in descending order
-        // qsort_r(cells, count, sizeof(*cells), compareCells, heatmap);
-
-         // Select the top N cells (e.g., top 10) to consider for radar sweep
-         // int topN = (count < 10) ? count : 10;
-         // int selectedIndex = rand() % topN;
-         int row = cells[0][0];
-         int col = cells[0][1];
-
-         free(cells);}*/
-
+     
         int **Grid = malloc(4 * sizeof(int *));
         for (int i = 0; i < 4; i++)
         {
@@ -942,92 +877,78 @@ void RadarSweepBot(char **opponentGrid, char **displayedGrid, int radarSweepsUse
 
     printf("Bot chose radar sweep coordinates: %d   %d\n", row, col);
 
-    
-int shipsFound=0;
-    for (int i = row; i < row + 2; i++) {
-        for (int j = col; j < col + 2; j++) {
-            if (checkIndex(i,j)) {
-                if (displayedGrid[i][j] == '~') {
-                    if (isalpha(opponentGrid[i][j])) {
-                        shipsFound=1;
-                        break;}
+    int shipsFound = 0;
+    for (int i = row; i < row + 2; i++)
+    {
+        if (shipsFound)
+            break;
+        for (int j = col; j < col + 2; j++)
+        {
+            if (checkIndex(i, j))
+            {
+                if (displayedGrid[i][j] == '~')
+                {
+                
+                    if (isalpha(opponentGrid[i][j]))
+                    {
+                        shipsFound = 1;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    printf("ShipsFound= %d", shipsFound);
 
-
-     if(shipsFound==0){
-        for(int i=row;i<row+2;i++){
-            for(int j=col;j<col+2;j++){
-if(checkIndex(i,j)){
-    heatmap[i][j]=0;
-}
+    int validGrid = 1;
+    for (int i = row; i < row + 2; i++)
+    {
+        for (int j = col; j < col + 2; j++)
+        {
+            if (!checkIndex(i, j))
+            {
+                validGrid = 0;
+                break;
             }
         }
     }
-    else{
-int index=0;
- for(int i=row;i<row+2;i++){
-            for(int j=col;j<col+2;j++){
-if(checkIndex(i,j)){
-    heatmap[i][j]+=5;
-list[index].row=i;
-list[index].col=j;
-}
+    printf("Valid= %d", validGrid);
+
+    if (validGrid)
+    {
+        if (shipsFound == 0)
+        {
+            for (int i = row; i < row + 2; i++)
+            {
+                for (int j = col; j < col + 2; j++)
+                {
+                    printf("Target: %d", targetCount);
+                    heatmap[i][j] -= 3;
+                }
             }
+        }
+
+        else
+        {
+            int index = 0;
+            for (int i = row; i < row + 2; i++)
+            {
+                for (int j = col; j < col + 2; j++)
+                {
+
+                    heatmap[i][j] += 5;
+                    list[index].row = i;
+                    list[index].col = j;
+                    targetCount++;
+                    index++;
+                    printf("coordinate: %d %d", list[index].row, list[index].col);
+                    printf("Target Count: %d", targetCount);
+                }
+            }
+        }
+    }
 }
-}
-
-}
-
-
-
-
-// int SmokeScreenBot (int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
-//     if (smokeScreensUsedBot >= shipsSunk) {
-//         printf("The bot cannot use any more smoke screens\n");
-//         return 0;
-//     }
-
-//     int row = -1, col = -1;
-//     bool foundUnhitShip = false;
-
-//     // Step 1: Look for unhit ship parts ('*') to deploy the smoke screen
-//     for (int i = 0; i < GridSize && !foundUnhitShip; i++) {
-//         for (int j = 0; j < GridSize && !foundUnhitShip; j++) {
-//             if (displayedGrid[i][j] == '*' && !visited[i][j]) {
-//                 row = i;
-//                 col = j;
-//                 foundUnhitShip = true;
-//             }
-//         }
-//     }
-
-//     // Step 2: If no unhit ship parts found (e.g., all ships hit), return an error
-//     if (!foundUnhitShip) {
-//         printf("No unhit ships found to deploy a smoke screen.\n");
-//         return 0;
-//     }// ghayre kermel ma yaamela
-
-//     // Mark this cell as visited
-//     visited[row][col] = true;
-
-//     printf("Bot chose smoke screen coordinates: %c%d\n", 'A' + row, col + 1);// ma lezem tbayyen
-
-//     // Step 3: Deploy the smoke screen in a 2x2 area starting from the chosen coordinates
-//     for (int i = row; i < row + 2; i++) {
-//         for (int j = col; j < col + 2; j++) {
-//             if (i >= 0 && i < GridSize && j >= 0 && j < GridSize) {
-//                 smokeGrid[i][j] = 1;  // Mark the area as a smoke screen
-//             }
-//         }
-//     }
-
-//     printf("Bot deployed smoke screen successfully\n");
-//    return 1;
-// }
 
 
 int SmokeScreenBot(int **smokeGrid, char **displayedGrid, int shipsSunk, int smokeScreensUsedBot) {
